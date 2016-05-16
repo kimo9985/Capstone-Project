@@ -7,8 +7,11 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
-import android.support.wearable.view.WatchViewStub;
+import android.os.Handler;
+import android.support.v4.view.ViewPager;
 import android.util.Log;
+import android.view.WindowManager;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 public class MainActivity extends Activity implements SensorEventListener {
@@ -17,6 +20,11 @@ public class MainActivity extends Activity implements SensorEventListener {
 
     SensorManager sensorManager;
     Sensor sensor;
+    private ViewPager viewPager;
+    private ImageView firstPageIndicator;
+    private ImageView secondPageIndicator;
+    private CountFragment countFragment;
+    private SettingsFragment settingsFragment;
 
     // Swings //
     private TextView forehandText, backhandText, overheadText;
@@ -65,10 +73,34 @@ public class MainActivity extends Activity implements SensorEventListener {
     }
 
     public void setupViews() {
-        forehandText = (TextView) findViewById(R.id.forehand_count);
-        backhandText = (TextView) findViewById(R.id.backhand_count);
-        overheadText = (TextView) findViewById(R.id.overhead_count);
 
+        viewPager = (ViewPager) findViewById(R.id.pager);
+        firstPageIndicator = (ImageView) findViewById(R.id.indicator_0);
+        secondPageIndicator = (ImageView) findViewById(R.id.indicator_1);
+        final PagerAdapter adapter = new PagerAdapter(getFragmentManager());
+        countFragment = new CountFragment();
+        settingsFragment = new SettingsFragment();
+        adapter.addFragment(countFragment);
+        adapter.addFragment(settingsFragment);
+        setIndicator(0);
+
+        viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int i, float v, int i2) {
+            }
+
+            @Override
+            public void onPageSelected(int i) {
+//                setIndicator(i);
+//                renewTimer();
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int i) {
+            }
+        });
+
+        viewPager.setAdapter(adapter);
     }
 
     @Override
@@ -159,6 +191,20 @@ public class MainActivity extends Activity implements SensorEventListener {
         sensorManager.unregisterListener(this);
         if (Log.isLoggable(LOG_TAG, Log.DEBUG)) {
             Log.d(LOG_TAG, "Unregistered for sensor events");
+        }
+    }
+
+    // Set page indicator for ViewPager //
+    private void setIndicator(int i) {
+        switch (i) {
+            case 0:
+                firstPageIndicator.setImageResource(R.drawable.full_10);
+                secondPageIndicator.setImageResource(R.drawable.empty_10);
+                break;
+            case 1:
+                firstPageIndicator.setImageResource(R.drawable.empty_10);
+                secondPageIndicator.setImageResource(R.drawable.full_10);
+                break;
         }
     }
 }
