@@ -25,6 +25,34 @@ public class CountFragment extends Fragment {
         backhandText = (TextView) view.findViewById(R.id.backhand_count);
         overheadText = (TextView) view.findViewById(R.id.overhead_count);
 
+        setForehandCounter(Utilities.getPrefForehand(getActivity()));
+        setBackhandCounter(Utilities.getPrefBackhand(getActivity()));
+        setOverheadCounter(Utilities.getPrefOverhead(getActivity()));
+
         return view;
+    }
+
+    public void setForehandCounter(String text) {
+        forehandText.setText(text);
+    }
+
+    public void setForehandCounter(int i) {
+        setForehandCounter(i < 0 ? "0" : String.valueOf(i));
+    }
+
+    public void setBackhandCounter(String text) {
+        backhandText.setText(text);
+    }
+
+    public void setBackhandCounter(int i) {
+        setBackhandCounter(i < 0 ? "0" : String.valueOf(i));
+    }
+
+    public void setOverheadCounter(String text) {
+        overheadText.setText(text);
+    }
+
+    public void setOverheadCounter(int i) {
+        setOverheadCounter(i < 0 ? "0" : String.valueOf(i));
     }
 }

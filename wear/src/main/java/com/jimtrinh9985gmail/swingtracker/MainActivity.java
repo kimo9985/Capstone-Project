@@ -14,12 +14,23 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 public class MainActivity extends Activity implements SensorEventListener {
 
     public final String LOG_TAG = MainActivity.class.getSimpleName();
 
+    // Screen Timer //
+    private static final long SCREEN_ON_TIMEOUT_MS = 300000; // in milliseconds
+    private Timer timer;
+    private TimerTask timerTask;
+
+    // Sensors //
     SensorManager sensorManager;
     Sensor sensor;
+
+    // Pager Fragments //
     private ViewPager viewPager;
     private ImageView firstPageIndicator;
     private ImageView secondPageIndicator;
@@ -27,7 +38,6 @@ public class MainActivity extends Activity implements SensorEventListener {
     private SettingsFragment settingsFragment;
 
     // Swings //
-    private TextView forehandText, backhandText, overheadText;
     private int foreHandCount = 0;
     private int backHandCount = 0;
     private int overHeadCount = 0;
@@ -60,9 +70,14 @@ public class MainActivity extends Activity implements SensorEventListener {
         setContentView(R.layout.activity_main);
         setupViews();
 
+        foreHandCount = Utilities.getPrefForehand(this);
+        backHandCount = Utilities.getPrefBackhand(this);
+        overHeadCount = Utilities.getPrefOverhead(this);
+        renewTimer();
+
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         if (sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE) != null &&
-                sensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION) != null) {
+                sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER) != null) {
             sensor = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
             sensor = sensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
             sensor = sensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY);
@@ -91,8 +106,8 @@ public class MainActivity extends Activity implements SensorEventListener {
 
             @Override
             public void onPageSelected(int i) {
-//                setIndicator(i);
-//                renewTimer();
+                setIndicator(i);
+                renewTimer();
             }
 
             @Override
@@ -121,7 +136,6 @@ public class MainActivity extends Activity implements SensorEventListener {
 
         calculateReading();
         determineSwing();
-        displayCount();
     }
 
     public void calculateReading() {
@@ -146,28 +160,62 @@ public class MainActivity extends Activity implements SensorEventListener {
     }
 
     public void determineSwing() {
+        determineSwingForRighty();
+    }
+
+    public void determineSwingForRighty() {
         if (deltaXLPF > 4 && deltaGYLPF > 2) {
             backHandCount++;
+            setBackhandCounter(backHandCount);
         }
         if (deltaXLPF > 4 && deltaGYLPF < -2) {
             foreHandCount++;
+            setForehandCounter(foreHandCount);
         }
         if (deltaZLPF > 4 && deltaGYLPF < -2) {
             overHeadCount++;
+            setOverheadCounter(overHeadCount);
         }
+        renewTimer();
         return;
     }
 
-    public void displayCount() {
-        if (foreHandCount != 0) {
-            forehandText.setText(String.valueOf(foreHandCount));
+    public void setForehandCounter(int i) {
+        countFragment.setForehandCounter(i);
+        Utilities.savePrefForehand(this, i);
+    }
+
+    public void setBackhandCounter(int i) {
+        countFragment.setBackhandCounter(i);
+        Utilities.savePrefBackhand(this, i);
+    }
+
+    public void setOverheadCounter(int i) {
+        countFragment.setOverheadCounter(i);
+        Utilities.savePrefOverhead(this, i);
+    }
+
+    public void resetCounter() {
+        setForehandCounter(0);
+        setBackhandCounter(0);
+        setOverheadCounter(0);
+        renewTimer();
+    }
+
+    private void renewTimer() {
+        if (null != timer) {
+            timer.cancel();
         }
-        if (backHandCount != 0) {
-            backhandText.setText(String.valueOf(backHandCount));
-        }
-        if (overHeadCount != 0) {
-            overheadText.setText(String.valueOf(overHeadCount));
-        }
+        timerTask = new TimerTask() {
+            @Override
+            public void run() {
+                if (Log.isLoggable(LOG_TAG, Log.DEBUG)) {
+                    Log.d(LOG_TAG, "Removing the FLAG_KEEP_SCREEN_ON flag to allow going to background");
+                }
+            }
+        };
+        timer = new Timer();
+        timer.schedule(timerTask, SCREEN_ON_TIMEOUT_MS);
     }
 
     @Override

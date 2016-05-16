@@ -2,6 +2,7 @@ package com.jimtrinh9985gmail.swingtracker;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 
 /**
  * Created by Kimo on 5/15/2016.
@@ -22,6 +23,11 @@ public class Utilities {
         }
     }
 
+    public static int getPrefForehand(Context context) {
+        SharedPreferences prefs = context.getSharedPreferences("forehandCount", Context.MODE_PRIVATE);
+        return prefs.getInt(SP_KEY_FOREHAND, 0);
+    }
+
     public static void savePrefBackhand(Context context, int value) {
         SharedPreferences prefs = context.getSharedPreferences("backhandCount", Context.MODE_PRIVATE);
         if (value < 0) {
@@ -31,6 +37,11 @@ public class Utilities {
         }
     }
 
+    public static int getPrefBackhand(Context context) {
+        SharedPreferences prefs = context.getSharedPreferences("backhandCount", Context.MODE_PRIVATE);
+        return prefs.getInt(SP_KEY_BACKHAND, 0);
+    }
+
     public static void savePrefOverhead(Context context, int value) {
         SharedPreferences prefs = context.getSharedPreferences("overheadCount", Context.MODE_PRIVATE);
         if (value < 0) {
@@ -38,6 +49,11 @@ public class Utilities {
         } else {
             prefs.edit().putInt(SP_KEY_OVERHEAD, value).apply();
         }
+    }
+
+    public static int getPrefOverhead(Context context) {
+        SharedPreferences prefs = context.getSharedPreferences("overheadCount", Context.MODE_PRIVATE);
+        return prefs.getInt(SP_KEY_OVERHEAD, 0);
     }
 
     public static void savePrefGrip(Context context, boolean grip) {
