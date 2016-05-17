@@ -29,6 +29,7 @@ public class MainActivity extends Activity implements SensorEventListener {
     // Sensors //
     SensorManager sensorManager;
     Sensor sensor;
+    private int sensorType;
 
     // Pager Fragments //
     private ViewPager viewPager;
@@ -61,7 +62,7 @@ public class MainActivity extends Activity implements SensorEventListener {
     private float deltaGYLPF = 0;
 
     // Low-Pass Filter //
-    private float alpha = .3f;
+    private float alpha = .4f;
     private float oneMinusAlpha = (1.0f - alpha);
 
     @Override
@@ -76,12 +77,16 @@ public class MainActivity extends Activity implements SensorEventListener {
         renewTimer();
 
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-        if (sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE) != null &&
-                sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER) != null) {
-            sensor = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
-            sensor = sensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
-            sensor = sensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY);
+        sensor = sensorManager.getDefaultSensor(sensorType);
+        if (sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE_UNCALIBRATED) != null &&
+                sensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION) != null) {
+
+            sensor = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE_UNCALIBRATED);
             sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_NORMAL);
+
+            sensor = sensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
+            sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_NORMAL);
+
         } else {
             Log.d(LOG_TAG, "Failed to initiate Gyroscope or/and Accelerometer!");
         }
@@ -122,15 +127,15 @@ public class MainActivity extends Activity implements SensorEventListener {
     public void onSensorChanged(SensorEvent event) {
 
         // Get sensor readings //
-        if (sensor.getType() == Sensor.TYPE_LINEAR_ACCELERATION) {
+        if (event.sensor.getType() == Sensor.TYPE_LINEAR_ACCELERATION) {
             deltaX = Math.abs(lastX - event.values[0]);
             deltaY = Math.abs(lastY - event.values[1]);
             deltaZ = Math.abs(lastZ - event.values[2]);
-        } else if (sensor.getType() == Sensor.TYPE_GRAVITY) {
+        } else if (event.sensor.getType() == Sensor.TYPE_GRAVITY) {
             gravityX = event.values[0];
             gravityY = event.values[1];
             gravityZ = event.values[2];
-        } else if (sensor.getType() == Sensor.TYPE_GYROSCOPE) {
+        } else if (event.sensor.getType() == Sensor.TYPE_GYROSCOPE_UNCALIBRATED) {
             deltaGY = event.values[1];
         }
 
@@ -148,7 +153,8 @@ public class MainActivity extends Activity implements SensorEventListener {
         deltaXLPF = deltaX - gravityX;
         deltaYLPF = deltaY - gravityY;
         deltaZLPF = deltaZ - gravityZ;
-        deltaGYLPF = deltaGY - gravityY;
+        //deltaGYLPF = deltaGY - gravityY;
+        deltaGYLPF = deltaGY;
 
         // Removing Additional Noise //
         if (deltaXLPF < .5)
