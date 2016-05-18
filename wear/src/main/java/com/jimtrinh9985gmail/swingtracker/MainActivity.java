@@ -17,6 +17,7 @@ import android.widget.TextView;
 import java.util.Timer;
 import java.util.TimerTask;
 
+
 public class MainActivity extends Activity implements SensorEventListener {
 
     public final String LOG_TAG = MainActivity.class.getSimpleName();
@@ -62,7 +63,7 @@ public class MainActivity extends Activity implements SensorEventListener {
     private float deltaGYLPF = 0;
 
     // Low-Pass Filter //
-    private float alpha = .4f;
+    private float alpha = .3f;
     private float oneMinusAlpha = (1.0f - alpha);
 
     @Override
@@ -71,20 +72,21 @@ public class MainActivity extends Activity implements SensorEventListener {
         setContentView(R.layout.activity_main);
         setupViews();
 
+
+
         foreHandCount = Utilities.getPrefForehand(this);
         backHandCount = Utilities.getPrefBackhand(this);
         overHeadCount = Utilities.getPrefOverhead(this);
         renewTimer();
 
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-        sensor = sensorManager.getDefaultSensor(sensorType);
-        if (sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE_UNCALIBRATED) != null &&
-                sensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION) != null) {
 
-            sensor = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE_UNCALIBRATED);
+        if (sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER) != null) {
+
+            sensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
             sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_NORMAL);
 
-            sensor = sensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
+            sensor = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE_UNCALIBRATED);
             sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_NORMAL);
 
         } else {
@@ -126,21 +128,24 @@ public class MainActivity extends Activity implements SensorEventListener {
     @Override
     public void onSensorChanged(SensorEvent event) {
 
+        determineSwing();
+
         // Get sensor readings //
-        if (event.sensor.getType() == Sensor.TYPE_LINEAR_ACCELERATION) {
+        if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
             deltaX = Math.abs(lastX - event.values[0]);
             deltaY = Math.abs(lastY - event.values[1]);
             deltaZ = Math.abs(lastZ - event.values[2]);
-        } else if (event.sensor.getType() == Sensor.TYPE_GRAVITY) {
+        } else
+        if (event.sensor.getType() == Sensor.TYPE_GRAVITY) {
             gravityX = event.values[0];
             gravityY = event.values[1];
             gravityZ = event.values[2];
-        } else if (event.sensor.getType() == Sensor.TYPE_GYROSCOPE_UNCALIBRATED) {
+        } else
+        if (event.sensor.getType() == Sensor.TYPE_GYROSCOPE_UNCALIBRATED) {
             deltaGY = event.values[1];
         }
 
         calculateReading();
-        determineSwing();
     }
 
     public void calculateReading() {
@@ -153,8 +158,7 @@ public class MainActivity extends Activity implements SensorEventListener {
         deltaXLPF = deltaX - gravityX;
         deltaYLPF = deltaY - gravityY;
         deltaZLPF = deltaZ - gravityZ;
-        //deltaGYLPF = deltaGY - gravityY;
-        deltaGYLPF = deltaGY;
+        deltaGYLPF = deltaGY - gravityY;
 
         // Removing Additional Noise //
         if (deltaXLPF < .5)
@@ -166,6 +170,7 @@ public class MainActivity extends Activity implements SensorEventListener {
     }
 
     public void determineSwing() {
+
         determineSwingForRighty();
     }
 
@@ -173,17 +178,20 @@ public class MainActivity extends Activity implements SensorEventListener {
         if (deltaXLPF > 4 && deltaGYLPF > 2) {
             backHandCount++;
             setBackhandCounter(backHandCount);
+            Log.d(LOG_TAG, "DeltaXLPF: " + deltaXLPF + " " + "DeltaGYLPF: " + deltaGYLPF);
         }
         if (deltaXLPF > 4 && deltaGYLPF < -2) {
             foreHandCount++;
             setForehandCounter(foreHandCount);
+            Log.d(LOG_TAG, "DeltaXLPF: " + deltaXLPF + " " + "DeltaGYLPF: " + deltaGYLPF);
         }
         if (deltaZLPF > 4 && deltaGYLPF < -2) {
             overHeadCount++;
             setOverheadCounter(overHeadCount);
+            Log.d(LOG_TAG, "DeltaZLPF: " + deltaZLPF + " " + "DeltaGYLPF: " + deltaGYLPF);
         }
         renewTimer();
-        return;
+        //return;
     }
 
     public void setForehandCounter(int i) {
