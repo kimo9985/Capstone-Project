@@ -17,6 +17,8 @@ import android.widget.TextView;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import wearprefs.WearPrefs;
+
 
 public class MainActivity extends Activity implements SensorEventListener {
 

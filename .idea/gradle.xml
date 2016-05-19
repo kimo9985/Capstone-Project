@@ -10,7 +10,6 @@
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/mobile" />
             <option value="$PROJECT_DIR$/wear" />
-            <option value="$PROJECT_DIR$/wearprotocol" />
           </set>
         </option>
         <option name="myModules">
@@ -18,7 +17,6 @@
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/mobile" />
             <option value="$PROJECT_DIR$/wear" />
-            <option value="$PROJECT_DIR$/wearprotocol" />
           </set>
         </option>
       </GradleProjectSettings>
