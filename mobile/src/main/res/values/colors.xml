@@ -3,4 +3,10 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+
+    <color name="A900_indigo">#1A237E</color>
+    <color name="A700_indigo">#303F9F</color>
+    <color name="A400_indigo">#5C6BC0</color>
+    <color name="A200_indigo">#9FA8DA</color>
+    <color name="A100_indigo">#C5CAE9</color>
 </resources>

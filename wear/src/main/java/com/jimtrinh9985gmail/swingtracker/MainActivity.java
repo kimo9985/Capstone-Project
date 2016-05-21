@@ -74,7 +74,9 @@ public class MainActivity extends Activity implements SensorEventListener {
         setContentView(R.layout.activity_main);
         setupViews();
 
-
+        WearPrefs.init(this, "com.swingtracker.FOREHAND");
+        WearPrefs.init(this, "com.swingtracker.BACKHAND");
+        WearPrefs.init(this, "com.swingtracker.OVERHEAD");
 
         foreHandCount = Utilities.getPrefForehand(this);
         backHandCount = Utilities.getPrefBackhand(this);
