@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Legend;
@@ -33,13 +34,12 @@ public class ChartFragment extends Fragment {
     private float[] yData = { 5, 10, 15, 30, 40 };
     private String[] xData = { "Sony", "Huawei", "LG", "Apple", "Samsung"};
 
-    @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.chart_fragment, container, false);
 
-        PieChart chart = (PieChart) view.findViewById(R.id.chart);
+        chart = (PieChart) view.findViewById(R.id.chart);
 
 
         // Configure pie Chart //
@@ -131,7 +131,5 @@ public class ChartFragment extends Fragment {
 
         // Update pie chart //
         chart.invalidate();
-
-
     }
 }
