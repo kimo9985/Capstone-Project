@@ -20,15 +20,6 @@
             android:layout_height="55dp"
             android:textSize="9sp" />
 
-        <Button
-            android:id="@+id/save_button"
-            android:text="Save"
-            android:layout_toRightOf="@id/reset_button"
-            android:layout_marginTop="40dp"
-            android:layout_width="55dp"
-            android:layout_height="55dp"
-            android:textSize="9sp" />
-
     </LinearLayout>
 
     <TextView

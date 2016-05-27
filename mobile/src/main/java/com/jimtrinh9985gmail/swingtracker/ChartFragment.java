@@ -1,26 +1,28 @@
 package com.jimtrinh9985gmail.swingtracker;
 
 import android.app.Fragment;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
-import com.github.mikephil.charting.formatter.PercentFormatter;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.ColorTemplate;
+import com.google.android.gms.wearable.WearableListenerService;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
+
+import wearprefs.WearPrefs;
 
 /**
  * Created by Kimo on 5/20/2016.
@@ -29,29 +31,45 @@ public class ChartFragment extends Fragment {
 
     public final String LOG_TAG = ChartFragment.class.getSimpleName();
 
+    private static int forehand, backhand, overhead;
+    //private SharedPreferences preferences;
+
     private PieChart chart;
 
-    private float[] yData = { 5, 10, 15, 30, 40 };
-    private String[] xData = { "Sony", "Huawei", "LG", "Apple", "Samsung"};
+    private int[] yData = { forehand, backhand, overhead };
+    private String[] xData = { "ForeHand", "BackHand", "OverHead" };
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.chart_fragment, container, false);
+        final View view = inflater.inflate(R.layout.chart_fragment, container, false);
+
+        SharedPreferences forehands = this.getActivity().getSharedPreferences
+                ("com.swingtracker.FOREHAND", Context.MODE_PRIVATE);
+        forehand = forehands.getInt("com.swingtracker.FOREHAND", 0);
+
+        SharedPreferences backhands = this.getActivity().getSharedPreferences
+                ("com.swingtracker.BACKHAND", Context.MODE_PRIVATE);
+        backhand = backhands.getInt("com.swingtracker.BACKHAND", 0);
+
+        SharedPreferences overheads = this.getActivity().getSharedPreferences
+                ("com.swingtracker.OVERHEAD", Context.MODE_PRIVATE);
+        overhead = overheads.getInt("com.swingtracker.OVERHEAD", 0);
+
+        Log.d(LOG_TAG, "Frag - Shared Preference Forehand: " + forehand);
+        Log.d(LOG_TAG, "Frag - Shared Preference Backhand: " + backhand);
+        Log.d(LOG_TAG, "Frag - Shared Preference Overhead: " + overhead);
 
         chart = (PieChart) view.findViewById(R.id.chart);
+        chart.setDescription("Swing Tracker");
 
-
-        // Configure pie Chart //
-        chart.setUsePercentValues(true);
-        chart.setDescription("Smartphones Market Share");
-
-        // Enable hole and configure //
+        // Donut Chart //
         chart.setDrawHoleEnabled(true);
-        chart.setHoleRadius(7);
-        chart.setTransparentCircleRadius(10);
+        chart.setHoleRadius(58f);
+        chart.setTransparentCircleRadius(61f);
+        chart.setHoleColor(Color.BLACK);
 
-        // Enable rotation of chart //
+        // Enable rotation //
         chart.setRotationAngle(0);
         chart.setRotationEnabled(true);
 
@@ -72,13 +90,13 @@ public class ChartFragment extends Fragment {
         // Add Data //
         addData();
 
-
         // Customize Legends //
         Legend legend = chart.getLegend();
         legend.setPosition(Legend.LegendPosition.RIGHT_OF_CHART);
         legend.setXEntrySpace(7);
         legend.setYEntrySpace(5);
 
+        chart.invalidate();
 
         return view;
     }
@@ -95,7 +113,7 @@ public class ChartFragment extends Fragment {
             xVals.add(xData[i]);
 
         // Create pie chart set //
-        PieDataSet dataSet = new PieDataSet(yVals1, "Market Share");
+        final PieDataSet dataSet = new PieDataSet(yVals1, "Type of Swing");
         dataSet.setSliceSpace(3);
         dataSet.setSelectionShift(5);
 
@@ -119,17 +137,21 @@ public class ChartFragment extends Fragment {
             colors.add(c);
 
         // Instantiate pie data object now //
-        PieData data = new PieData(xVals, dataSet);
-        data.setValueFormatter(new PercentFormatter());
+        final PieData data = new PieData(xVals, dataSet);
+        //data.setValueFormatter(new PercentFormatter());
         data.setValueTextSize(11f);
         data.setValueTextColor(Color.GRAY);
 
         chart.setData(data);
-
+        Log.d(LOG_TAG, "addData: " + data);
+        Log.d(LOG_TAG, "addData: " + yData);
         // Undo all highlights //
         chart.highlightValues(null);
 
         // Update pie chart //
         chart.invalidate();
+        chart.refreshDrawableState();
+
+        Log.d(LOG_TAG, "Invalidate Chart v2!!!");
     }
 }

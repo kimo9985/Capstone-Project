@@ -2,12 +2,17 @@ package com.jimtrinh9985gmail.swingtracker;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.ListPreference;
+import android.preference.Preference;
+import android.preference.PreferenceManager;
+import android.renderscript.Sampler;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.WindowManager;
@@ -23,6 +28,8 @@ import wearprefs.WearPrefs;
 public class MainActivity extends Activity implements SensorEventListener {
 
     public final String LOG_TAG = MainActivity.class.getSimpleName();
+
+    //private SharedPreferences preferences;
 
     // Screen Timer //
     private static final long SCREEN_ON_TIMEOUT_MS = 300000; // in milliseconds
@@ -77,6 +84,10 @@ public class MainActivity extends Activity implements SensorEventListener {
         WearPrefs.init(this, "com.swingtracker.FOREHAND");
         WearPrefs.init(this, "com.swingtracker.BACKHAND");
         WearPrefs.init(this, "com.swingtracker.OVERHEAD");
+
+        // Listen for preference change //
+        //preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        //preferences.registerOnSharedPreferenceChangeListener(this);
 
         foreHandCount = Utilities.getPrefForehand(this);
         backHandCount = Utilities.getPrefBackhand(this);
@@ -219,6 +230,7 @@ public class MainActivity extends Activity implements SensorEventListener {
         setOverheadCounter(0);
         renewTimer();
     }
+
 
     private void renewTimer() {
         if (null != timer) {

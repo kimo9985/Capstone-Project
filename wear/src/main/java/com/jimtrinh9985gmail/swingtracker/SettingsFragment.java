@@ -3,6 +3,7 @@ package com.jimtrinh9985gmail.swingtracker;
 import android.app.Fragment;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,6 +24,7 @@ public class SettingsFragment extends Fragment {
     Button resetButton;
     Button saveButton;
     Switch grip;
+
 
     double forehand, backhand, overhead;
 
@@ -52,14 +54,6 @@ public class SettingsFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 ((MainActivity) getActivity()).resetCounter();
-            }
-        });
-
-        saveButton = (Button) view.findViewById(R.id.save_button);
-        saveButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d(LOG_TAG, "EXECUTE GOOGLE API CLIENT!");
             }
         });
 
