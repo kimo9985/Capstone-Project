@@ -13,11 +13,11 @@ public class MainActivity extends AppCompatActivity {
 
     public final String LOG_TAG = MainActivity.class.getSimpleName();
 
-    private static int forehand, backhand, overhead;
+    //private static int forehand, backhand, overhead;
     private Button button;
 
     // Swings //
-    private TextView forehandText, backhandText, overheadText;
+    //private TextView forehandText, backhandText, overheadText;
 
     //private static final String SP_KEY_FOREHAND = "forehandCount";
 

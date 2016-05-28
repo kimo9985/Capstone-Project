@@ -10,12 +10,20 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.data.ChartData;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.highlight.Highlight;
+import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.ColorTemplate;
 import com.google.android.gms.wearable.WearableListenerService;
@@ -32,12 +40,10 @@ public class ChartFragment extends Fragment {
     public final String LOG_TAG = ChartFragment.class.getSimpleName();
 
     private static int forehand, backhand, overhead;
-    //private SharedPreferences preferences;
+    private BarChart chart;
 
-    private PieChart chart;
-
-    private int[] yData = { forehand, backhand, overhead };
-    private String[] xData = { "ForeHand", "BackHand", "OverHead" };
+    //private int[] yData = { 5, 10, 7 };
+    //private String[] xData = { "ForeHand", "BackHand", "OverHead" };
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -60,98 +66,53 @@ public class ChartFragment extends Fragment {
         Log.d(LOG_TAG, "Frag - Shared Preference Backhand: " + backhand);
         Log.d(LOG_TAG, "Frag - Shared Preference Overhead: " + overhead);
 
-        chart = (PieChart) view.findViewById(R.id.chart);
+        chart = (BarChart) view.findViewById(R.id.chart);
+
+        // Chart Styling for BarChart //
         chart.setDescription("Swing Tracker");
+        chart.setNoDataTextDescription("No Data");
+        chart.setDescriptionColor(Color.BLACK);
 
-        // Donut Chart //
-        chart.setDrawHoleEnabled(true);
-        chart.setHoleRadius(58f);
-        chart.setTransparentCircleRadius(61f);
-        chart.setHoleColor(Color.BLACK);
+        // X-Axis //
+        XAxis xAxis = chart.getXAxis();
+        xAxis.setAvoidFirstLastClipping(true);
+        xAxis.setSpaceBetweenLabels(1);
+        xAxis.setTextColor(Color.RED);
+        xAxis.setDrawAxisLine(true);
+        xAxis.setDrawGridLines(true);
+        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
 
-        // Enable rotation //
-        chart.setRotationAngle(0);
-        chart.setRotationEnabled(true);
 
-        // Set a chart value selected listener //
-        chart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
-            @Override
-            public void onValueSelected(Entry e, int dataSetIndex, Highlight h) {
-                if (e == null)
-                    return;
-            }
 
-            @Override
-            public void onNothingSelected() {
+        // Y-Axis //
+        YAxis leftAxis = chart.getAxisLeft();
+        leftAxis.setTextColor(Color.RED);
+        leftAxis.setDrawLabels(false);
+        leftAxis.setDrawAxisLine(false);
+        leftAxis.setDrawGridLines(false);
+        leftAxis.setDrawZeroLine(true);
+        leftAxis.setLabelCount(3, true);
+        chart.getAxisRight().setEnabled(false);
 
-            }
-        });
 
-        // Add Data //
-        addData();
+        ArrayList<BarEntry> yValues = new ArrayList<>();
+        yValues.add(new BarEntry(4, 0));
+        yValues.add(new BarEntry(18, 1));
+        yValues.add(new BarEntry(6, 2));
 
-        // Customize Legends //
-        Legend legend = chart.getLegend();
-        legend.setPosition(Legend.LegendPosition.RIGHT_OF_CHART);
-        legend.setXEntrySpace(7);
-        legend.setYEntrySpace(5);
+        BarDataSet barDataSet = new BarDataSet(yValues, "Swing Tracker");
 
+        ArrayList<String> labels = new ArrayList<String>();
+        labels.add("Forehand");
+        labels.add("Backhand");
+        labels.add("Overhead");
+
+        BarData data = new BarData(labels, barDataSet);
+        chart.setData(data);
+        chart.setDescription("Swing Counter");
+        chart.animateXY(2000, 2000);
         chart.invalidate();
 
         return view;
-    }
-
-    private void addData() {
-        ArrayList<Entry> yVals1 = new ArrayList<Entry>();
-
-        for (int i = 0; i < yData.length; i++)
-            yVals1.add(new Entry(yData[i], i));
-
-        ArrayList<String> xVals = new ArrayList<String>();
-
-        for (int i = 0; i < xData.length; i++)
-            xVals.add(xData[i]);
-
-        // Create pie chart set //
-        final PieDataSet dataSet = new PieDataSet(yVals1, "Type of Swing");
-        dataSet.setSliceSpace(3);
-        dataSet.setSelectionShift(5);
-
-        // Add colors //
-
-        ArrayList<Integer> colors = new ArrayList<Integer>();
-
-        for (int c : ColorTemplate.VORDIPLOM_COLORS)
-                colors.add(c);
-
-        for (int c : ColorTemplate.JOYFUL_COLORS)
-            colors.add(c);
-
-        for (int c : ColorTemplate.COLORFUL_COLORS)
-            colors.add(c);
-
-        for (int c : ColorTemplate.LIBERTY_COLORS)
-            colors.add(c);
-
-        for (int c : ColorTemplate.PASTEL_COLORS)
-            colors.add(c);
-
-        // Instantiate pie data object now //
-        final PieData data = new PieData(xVals, dataSet);
-        //data.setValueFormatter(new PercentFormatter());
-        data.setValueTextSize(11f);
-        data.setValueTextColor(Color.GRAY);
-
-        chart.setData(data);
-        Log.d(LOG_TAG, "addData: " + data);
-        Log.d(LOG_TAG, "addData: " + yData);
-        // Undo all highlights //
-        chart.highlightValues(null);
-
-        // Update pie chart //
-        chart.invalidate();
-        chart.refreshDrawableState();
-
-        Log.d(LOG_TAG, "Invalidate Chart v2!!!");
     }
 }
