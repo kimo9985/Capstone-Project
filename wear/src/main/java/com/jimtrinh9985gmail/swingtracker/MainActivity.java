@@ -1,12 +1,16 @@
 package com.jimtrinh9985gmail.swingtracker;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.os.BatteryManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Vibrator;
@@ -38,8 +42,6 @@ public class MainActivity extends Activity implements SensorEventListener {
     private long mLastTime = 0;
     private long timeStamp;
 
-    //private SharedPreferences preferences;
-
     // Screen Timer //
     private static final long SCREEN_ON_TIMEOUT_MS = 300000; // in milliseconds
     private Timer timer;
@@ -48,7 +50,6 @@ public class MainActivity extends Activity implements SensorEventListener {
     // Sensors //
     SensorManager sensorManager;
     Sensor sensor;
-    private int sensorType;
 
     // Pager Fragments //
     private ViewPager viewPager;
@@ -103,10 +104,6 @@ public class MainActivity extends Activity implements SensorEventListener {
         WearPrefs.init(this, "com.swingtracker.BACKHAND");
         WearPrefs.init(this, "com.swingtracker.OVERHEAD");
 
-        // Listen for preference change //
-        //preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        //preferences.registerOnSharedPreferenceChangeListener(this);
-
         foreHandCount = Utilities.getPrefForehand(this);
         backHandCount = Utilities.getPrefBackhand(this);
         overHeadCount = Utilities.getPrefOverhead(this);
@@ -126,7 +123,7 @@ public class MainActivity extends Activity implements SensorEventListener {
             sensorManager.registerListener(this, sensor, TIME_MS);
 
         } else {
-            Log.d(LOG_TAG, "Failed to initiate Gyroscope or/and Accelerometer!");
+            Log.d(LOG_TAG, "Failed to initiate Accelerometer!");
         }
     }
 
@@ -217,10 +214,14 @@ public class MainActivity extends Activity implements SensorEventListener {
 
     public void determineSwing() {
 
-        if ((timeStamp - mLastTime) > TIME_THRESHOLD_NS) {
+        if ((timeStamp - mLastTime) > TIME_THRESHOLD_NS && Utilities.SP_KEY_GRIP.equals(true)) {
             determineSwingForRighty();
         } else {
-            return;
+            if ((timeStamp - mLastTime) > TIME_THRESHOLD_NS && Utilities.SP_KEY_GRIP.equals(false)) {
+                determineSwingForLefty();
+            } else {
+                return;
+            }
         }
     }
 
@@ -229,43 +230,76 @@ public class MainActivity extends Activity implements SensorEventListener {
             backHandCount++;
             setBackhandCounter(backHandCount);
             vibrate();
-            Log.d(LOG_TAG, "Backhand:");
+            Log.d(LOG_TAG, "Righty Backhand:");
             Log.d(LOG_TAG, "DeltaXLPF: " + deltaXLPF + " " + "DeltaYLPF: " + deltaYLPF + " " + "DeltaZLPF: " + deltaZLPF);
             Log.d(LOG_TAG, "DeltaGYLPF: " + deltaGYLPF + " " + "DeltaGX: " + deltaGXLPF + " " + "DeltaGZ: " + deltaGZLPF);
             Log.d(LOG_TAG, "GravityX: " + gravityX + " " + "GravityY: " + gravityY + " " + "GravityZ: " + gravityZ);
             Log.d(LOG_TAG, "Linear Acc X,Y,Z: " + deltaLX + " " + deltaLY + " " + deltaLZ);
-//            Log.d(LOG_TAG, "DeltaXLPF: " + deltaXLPF + " " + "DeltaGYLPF: " + deltaGYLPF
-//                    + " " + timeStamp + " - " + mLastTime + " = " + (timeStamp-mLastTime));
             mLastTime = timeStamp;
         }
         if (deltaXLPF > 4 && deltaGZLPF < -40 && deltaLX > 0) {
             foreHandCount++;
             setForehandCounter(foreHandCount);
             vibrate();
-            Log.d(LOG_TAG, "Forehand:");
+            Log.d(LOG_TAG, "Righty Forehand:");
             Log.d(LOG_TAG, "DeltaXLPF: " + deltaXLPF + " " + "DeltaYLPF: " + deltaYLPF + " " + "DeltaZLPF: " + deltaZLPF);
             Log.d(LOG_TAG, "DeltaGYLPF: " + deltaGYLPF + " " + "DeltaGX: " + deltaGXLPF + " " + "DeltaGZ: " + deltaGZLPF);
             Log.d(LOG_TAG, "GravityX: " + gravityX + " " + "GravityY: " + gravityY + " " + "GravityZ: " + gravityZ);
             Log.d(LOG_TAG, "Linear Acc X,Y,Z: " + deltaLX + " " + deltaLY + " " + deltaLZ);
-//            Log.d(LOG_TAG, "DeltaXLPF: " + deltaXLPF + " " + "DeltaGYLPF: " + deltaGYLPF
-//                    + " " + timeStamp + " - " + mLastTime + " = " + (timeStamp-mLastTime));
             mLastTime = timeStamp;
         }
         if (deltaXLPF > 4 && deltaGZLPF > -30 && deltaLX < -2) {
             overHeadCount++;
             setOverheadCounter(overHeadCount);
             vibrate();
-            Log.d(LOG_TAG, "Overhead:");
+            Log.d(LOG_TAG, "Righty Overhead:");
             Log.d(LOG_TAG, "DeltaXLPF: " + deltaXLPF + " " + "DeltaYLPF: " + deltaYLPF + " " + "DeltaZLPF: " + deltaZLPF);
             Log.d(LOG_TAG, "DeltaGYLPF: " + deltaGYLPF + " " + "DeltaGX: " + deltaGXLPF + " " + "DeltaGZ: " + deltaGZLPF);
             Log.d(LOG_TAG, "GravityX: " + gravityX + " " + "GravityY: " + gravityY + " " + "GravityZ: " + gravityZ);
             Log.d(LOG_TAG, "Linear Acc X,Y,Z: " + deltaLX + " " + deltaLY + " " + deltaLZ);
-//            Log.d(LOG_TAG, "DeltaZLPF: " + deltaZLPF + " " + "DeltaGYLPF: " + deltaGYLPF
-//                    + " " + timeStamp + " - " + mLastTime + " = " + (timeStamp-mLastTime));
             mLastTime = timeStamp;
         }
         renewTimer();
         return;
+    }
+
+    public void determineSwingForLefty() {
+        if (deltaXLPF > 4 && deltaGZLPF > -30 && deltaLX > 0) {
+            foreHandCount++;
+            setBackhandCounter(backHandCount);
+            vibrate();
+            Log.d(LOG_TAG, "Righty Forehand:");
+            Log.d(LOG_TAG, "DeltaXLPF: " + deltaXLPF + " " + "DeltaYLPF: " + deltaYLPF + " " + "DeltaZLPF: " + deltaZLPF);
+            Log.d(LOG_TAG, "DeltaGYLPF: " + deltaGYLPF + " " + "DeltaGX: " + deltaGXLPF + " " + "DeltaGZ: " + deltaGZLPF);
+            Log.d(LOG_TAG, "GravityX: " + gravityX + " " + "GravityY: " + gravityY + " " + "GravityZ: " + gravityZ);
+            Log.d(LOG_TAG, "Linear Acc X,Y,Z: " + deltaLX + " " + deltaLY + " " + deltaLZ);
+            mLastTime = timeStamp;
+        }
+        if (deltaXLPF > 4 && deltaGZLPF < -40 && deltaLX > 0) {
+            backHandCount++;
+            setForehandCounter(foreHandCount);
+            vibrate();
+            Log.d(LOG_TAG, "Righty Backhand:");
+            Log.d(LOG_TAG, "DeltaXLPF: " + deltaXLPF + " " + "DeltaYLPF: " + deltaYLPF + " " + "DeltaZLPF: " + deltaZLPF);
+            Log.d(LOG_TAG, "DeltaGYLPF: " + deltaGYLPF + " " + "DeltaGX: " + deltaGXLPF + " " + "DeltaGZ: " + deltaGZLPF);
+            Log.d(LOG_TAG, "GravityX: " + gravityX + " " + "GravityY: " + gravityY + " " + "GravityZ: " + gravityZ);
+            Log.d(LOG_TAG, "Linear Acc X,Y,Z: " + deltaLX + " " + deltaLY + " " + deltaLZ);
+            mLastTime = timeStamp;
+        }
+        if (deltaXLPF > 4 && deltaGZLPF > -30 && deltaLX < -2) {
+            overHeadCount++;
+            setOverheadCounter(overHeadCount);
+            vibrate();
+            Log.d(LOG_TAG, "Righty Overhead:");
+            Log.d(LOG_TAG, "DeltaXLPF: " + deltaXLPF + " " + "DeltaYLPF: " + deltaYLPF + " " + "DeltaZLPF: " + deltaZLPF);
+            Log.d(LOG_TAG, "DeltaGYLPF: " + deltaGYLPF + " " + "DeltaGX: " + deltaGXLPF + " " + "DeltaGZ: " + deltaGZLPF);
+            Log.d(LOG_TAG, "GravityX: " + gravityX + " " + "GravityY: " + gravityY + " " + "GravityZ: " + gravityZ);
+            Log.d(LOG_TAG, "Linear Acc X,Y,Z: " + deltaLX + " " + deltaLY + " " + deltaLZ);
+            mLastTime = timeStamp;
+        }
+        renewTimer();
+        return;
+
     }
 
     public void setForehandCounter(int i) {
@@ -333,6 +367,11 @@ public class MainActivity extends Activity implements SensorEventListener {
         if (Log.isLoggable(LOG_TAG, Log.DEBUG)) {
             Log.d(LOG_TAG, "Unregistered for sensor events");
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
     }
 
     // Set page indicator for ViewPager //

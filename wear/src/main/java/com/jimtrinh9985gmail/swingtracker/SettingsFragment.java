@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.Switch;
 
 import wearprefs.WearPrefs;
@@ -22,11 +23,7 @@ public class SettingsFragment extends Fragment {
     public final String LOG_TAG = SettingsFragment.class.getSimpleName();
 
     Button resetButton;
-    Button saveButton;
     Switch grip;
-
-
-    double forehand, backhand, overhead;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -48,6 +45,7 @@ public class SettingsFragment extends Fragment {
         Log.d(LOG_TAG, "Wearable Forehand: " + forehand);
         Log.d(LOG_TAG, "Wearable Backhand: " + backhand);
         Log.d(LOG_TAG, "Wearable Overhead: " + overhead);
+        Log.d(LOG_TAG, "Grip1: " + grip);
 
         resetButton = (Button) view.findViewById(R.id.reset_button);
         resetButton.setOnClickListener(new View.OnClickListener() {
@@ -58,8 +56,24 @@ public class SettingsFragment extends Fragment {
         });
 
         grip = (Switch) view.findViewById(R.id.switch1);
-        grip.setChecked(true);
-
+        initializeGrip();
+        Log.d(LOG_TAG, "Grip2: " + grip);
+        grip.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    Utilities.savePrefGrip(getActivity(), true);
+                } else {
+                    Utilities.savePrefGrip(getActivity(), false);
+                }
+            }
+        });
         return view;
+    }
+
+    public void initializeGrip() {
+        if (grip == null) {
+            Utilities.savePrefGrip(getActivity(), true);
+        }
     }
 }

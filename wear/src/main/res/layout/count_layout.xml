@@ -96,14 +96,12 @@
         android:maxWidth="36dp"
         android:layout_centerHorizontal="true" />
 
-
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/battery_level"
         android:layout_alignParentBottom="true"
         style="@style/Counter"
-        android:text="50%"
         android:gravity="center" />
 
 </RelativeLayout>

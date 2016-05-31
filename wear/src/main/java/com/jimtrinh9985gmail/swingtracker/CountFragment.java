@@ -1,7 +1,11 @@
 package com.jimtrinh9985gmail.swingtracker;
 
 import android.app.Fragment;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.os.BatteryManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -28,6 +32,9 @@ public class CountFragment extends Fragment {
     // Swings //
     private TextView forehandText, backhandText, overheadText;
 
+    // Battery //
+    public TextView battery;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -36,6 +43,9 @@ public class CountFragment extends Fragment {
         forehandText = (TextView) view.findViewById(R.id.forehand_count);
         backhandText = (TextView) view.findViewById(R.id.backhand_count);
         overheadText = (TextView) view.findViewById(R.id.overhead_count);
+        battery = (TextView) view.findViewById(R.id.battery_level);
+
+        getActivity().registerReceiver(receiver, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
 
         setForehandCounter(Utilities.getPrefForehand(getActivity()));
         setBackhandCounter(Utilities.getPrefBackhand(getActivity()));
@@ -43,6 +53,14 @@ public class CountFragment extends Fragment {
 
         return view;
     }
+
+    // Battery Level //
+    private BroadcastReceiver receiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            battery.setText(String.valueOf(intent.getIntExtra(BatteryManager.EXTRA_LEVEL, 0) + "%"));
+        }
+    };
 
     public void setForehandCounter(String text) {
         forehandText.setText(text);
@@ -66,5 +84,11 @@ public class CountFragment extends Fragment {
 
     public void setOverheadCounter(int i) {
         setOverheadCounter(i < 0 ? "0" : String.valueOf(i));
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        getActivity().unregisterReceiver(receiver);
     }
 }

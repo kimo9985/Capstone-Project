@@ -15,7 +15,7 @@ public class Utilities {
     public static final String SP_KEY_FOREHAND = "com.swingtracker.FOREHAND";
     public static final String SP_KEY_BACKHAND = "com.swingtracker.BACKHAND";
     public static final String SP_KEY_OVERHEAD = "com.swingtracker.OVERHEAD";
-    public static final String SP_KEY_GRIP = "grip";
+    public static final String SP_KEY_GRIP = "com.swingtracker.GRIP";
 
 
     public static void savePrefForehand(Context context, int value) {
@@ -63,6 +63,7 @@ public class Utilities {
     }
 
     public static void savePrefGrip(Context context, boolean grip) {
-        SharedPreferences prefs = context.getSharedPreferences("grip", Context.MODE_PRIVATE);
+            SharedPreferences prefs = context.getSharedPreferences("com.swingtracker.GRIP", Context.MODE_PRIVATE);
+            prefs.edit().putBoolean(SP_KEY_GRIP, grip).apply();
     }
 }
