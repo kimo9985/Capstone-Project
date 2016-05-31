@@ -9,6 +9,7 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Vibrator;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceManager;
@@ -19,6 +20,8 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.sql.Time;
+import java.sql.Timestamp;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -28,6 +31,12 @@ import wearprefs.WearPrefs;
 public class MainActivity extends Activity implements SensorEventListener {
 
     public final String LOG_TAG = MainActivity.class.getSimpleName();
+
+    // Delay between sensor readings //
+    private static final int TIME_MS = 400000;  // in microseconds (.4 seconds)
+    private static final long TIME_THRESHOLD_NS = 400000000;  // in nanoseconds (.4 seconds)
+    private long mLastTime = 0;
+    private long timeStamp;
 
     //private SharedPreferences preferences;
 
@@ -53,7 +62,7 @@ public class MainActivity extends Activity implements SensorEventListener {
     private int backHandCount = 0;
     private int overHeadCount = 0;
 
-    // Linear Acceleration //
+    // Accelerometer //
     private float lastX, lastY, lastZ;
     private float deltaX = 0;
     private float deltaY = 0;
@@ -62,14 +71,23 @@ public class MainActivity extends Activity implements SensorEventListener {
     private float deltaYLPF = 0;
     private float deltaZLPF = 0;
 
+    // Linear Acceleration //
+    private float deltaLX = 0;
+    private float deltaLY = 0;
+    private float deltaLZ = 0;
+
     // Gravity //
     private float gravityX = 0;
     private float gravityY = 0;
     private float gravityZ = 0;
 
     // Gyroscope //
+    private float deltaGX = 0;
     private float deltaGY = 0;
+    private float deltaGZ = 0;
+    private float deltaGXLPF = 0;
     private float deltaGYLPF = 0;
+    private float deltaGZLPF = 0;
 
     // Low-Pass Filter //
     private float alpha = .3f;
@@ -99,10 +117,13 @@ public class MainActivity extends Activity implements SensorEventListener {
         if (sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER) != null) {
 
             sensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-            sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_NORMAL);
+            sensorManager.registerListener(this, sensor, TIME_MS);
 
             sensor = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE_UNCALIBRATED);
-            sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_NORMAL);
+            sensorManager.registerListener(this, sensor, TIME_MS);
+
+            sensor = sensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
+            sensorManager.registerListener(this, sensor, TIME_MS);
 
         } else {
             Log.d(LOG_TAG, "Failed to initiate Gyroscope or/and Accelerometer!");
@@ -150,6 +171,7 @@ public class MainActivity extends Activity implements SensorEventListener {
             deltaX = Math.abs(lastX - event.values[0]);
             deltaY = Math.abs(lastY - event.values[1]);
             deltaZ = Math.abs(lastZ - event.values[2]);
+            timeStamp = event.timestamp;
         } else
         if (event.sensor.getType() == Sensor.TYPE_GRAVITY) {
             gravityX = event.values[0];
@@ -157,7 +179,14 @@ public class MainActivity extends Activity implements SensorEventListener {
             gravityZ = event.values[2];
         } else
         if (event.sensor.getType() == Sensor.TYPE_GYROSCOPE_UNCALIBRATED) {
+            deltaGX = event.values[0];
             deltaGY = event.values[1];
+            deltaGZ = event.values[2];
+        } else
+        if (event.sensor.getType() == Sensor.TYPE_LINEAR_ACCELERATION) {
+            deltaLX = event.values[0];
+            deltaLY = event.values[1];
+            deltaLZ = event.values[2];
         }
 
         calculateReading();
@@ -173,7 +202,9 @@ public class MainActivity extends Activity implements SensorEventListener {
         deltaXLPF = deltaX - gravityX;
         deltaYLPF = deltaY - gravityY;
         deltaZLPF = deltaZ - gravityZ;
+        deltaGXLPF = deltaGX - gravityX;
         deltaGYLPF = deltaGY - gravityY;
+        deltaGZLPF = deltaGZ - gravityZ;
 
         // Removing Additional Noise //
         if (deltaXLPF < .5)
@@ -186,27 +217,55 @@ public class MainActivity extends Activity implements SensorEventListener {
 
     public void determineSwing() {
 
-        determineSwingForRighty();
+        if ((timeStamp - mLastTime) > TIME_THRESHOLD_NS) {
+            determineSwingForRighty();
+        } else {
+            return;
+        }
     }
 
     public void determineSwingForRighty() {
-        if (deltaXLPF > 4 && deltaGYLPF > 2) {
+        if (deltaXLPF > 4 && deltaGZLPF > -30 && deltaLX > 0) {
             backHandCount++;
             setBackhandCounter(backHandCount);
-            Log.d(LOG_TAG, "DeltaXLPF: " + deltaXLPF + " " + "DeltaGYLPF: " + deltaGYLPF);
+            vibrate();
+            Log.d(LOG_TAG, "Backhand:");
+            Log.d(LOG_TAG, "DeltaXLPF: " + deltaXLPF + " " + "DeltaYLPF: " + deltaYLPF + " " + "DeltaZLPF: " + deltaZLPF);
+            Log.d(LOG_TAG, "DeltaGYLPF: " + deltaGYLPF + " " + "DeltaGX: " + deltaGXLPF + " " + "DeltaGZ: " + deltaGZLPF);
+            Log.d(LOG_TAG, "GravityX: " + gravityX + " " + "GravityY: " + gravityY + " " + "GravityZ: " + gravityZ);
+            Log.d(LOG_TAG, "Linear Acc X,Y,Z: " + deltaLX + " " + deltaLY + " " + deltaLZ);
+//            Log.d(LOG_TAG, "DeltaXLPF: " + deltaXLPF + " " + "DeltaGYLPF: " + deltaGYLPF
+//                    + " " + timeStamp + " - " + mLastTime + " = " + (timeStamp-mLastTime));
+            mLastTime = timeStamp;
         }
-        if (deltaXLPF > 4 && deltaGYLPF < -2) {
+        if (deltaXLPF > 4 && deltaGZLPF < -40 && deltaLX > 0) {
             foreHandCount++;
             setForehandCounter(foreHandCount);
-            Log.d(LOG_TAG, "DeltaXLPF: " + deltaXLPF + " " + "DeltaGYLPF: " + deltaGYLPF);
+            vibrate();
+            Log.d(LOG_TAG, "Forehand:");
+            Log.d(LOG_TAG, "DeltaXLPF: " + deltaXLPF + " " + "DeltaYLPF: " + deltaYLPF + " " + "DeltaZLPF: " + deltaZLPF);
+            Log.d(LOG_TAG, "DeltaGYLPF: " + deltaGYLPF + " " + "DeltaGX: " + deltaGXLPF + " " + "DeltaGZ: " + deltaGZLPF);
+            Log.d(LOG_TAG, "GravityX: " + gravityX + " " + "GravityY: " + gravityY + " " + "GravityZ: " + gravityZ);
+            Log.d(LOG_TAG, "Linear Acc X,Y,Z: " + deltaLX + " " + deltaLY + " " + deltaLZ);
+//            Log.d(LOG_TAG, "DeltaXLPF: " + deltaXLPF + " " + "DeltaGYLPF: " + deltaGYLPF
+//                    + " " + timeStamp + " - " + mLastTime + " = " + (timeStamp-mLastTime));
+            mLastTime = timeStamp;
         }
-        if (deltaZLPF > 4 && deltaGYLPF < -2) {
+        if (deltaXLPF > 4 && deltaGZLPF > -30 && deltaLX < -2) {
             overHeadCount++;
             setOverheadCounter(overHeadCount);
-            Log.d(LOG_TAG, "DeltaZLPF: " + deltaZLPF + " " + "DeltaGYLPF: " + deltaGYLPF);
+            vibrate();
+            Log.d(LOG_TAG, "Overhead:");
+            Log.d(LOG_TAG, "DeltaXLPF: " + deltaXLPF + " " + "DeltaYLPF: " + deltaYLPF + " " + "DeltaZLPF: " + deltaZLPF);
+            Log.d(LOG_TAG, "DeltaGYLPF: " + deltaGYLPF + " " + "DeltaGX: " + deltaGXLPF + " " + "DeltaGZ: " + deltaGZLPF);
+            Log.d(LOG_TAG, "GravityX: " + gravityX + " " + "GravityY: " + gravityY + " " + "GravityZ: " + gravityZ);
+            Log.d(LOG_TAG, "Linear Acc X,Y,Z: " + deltaLX + " " + deltaLY + " " + deltaLZ);
+//            Log.d(LOG_TAG, "DeltaZLPF: " + deltaZLPF + " " + "DeltaGYLPF: " + deltaGYLPF
+//                    + " " + timeStamp + " - " + mLastTime + " = " + (timeStamp-mLastTime));
+            mLastTime = timeStamp;
         }
         renewTimer();
-        //return;
+        return;
     }
 
     public void setForehandCounter(int i) {
@@ -231,6 +290,10 @@ public class MainActivity extends Activity implements SensorEventListener {
         renewTimer();
     }
 
+    private void vibrate() {
+        Vibrator vibe = (Vibrator) getApplicationContext().getSystemService(Context.VIBRATOR_SERVICE);
+        vibe.vibrate(100);
+    }
 
     private void renewTimer() {
         if (null != timer) {

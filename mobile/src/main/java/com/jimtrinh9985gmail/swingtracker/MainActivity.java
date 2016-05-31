@@ -4,8 +4,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import wearprefs.WearPrefs;
 
@@ -13,8 +11,9 @@ public class MainActivity extends AppCompatActivity {
 
     public final String LOG_TAG = MainActivity.class.getSimpleName();
 
-    //private static int forehand, backhand, overhead;
     private Button button;
+
+    //private static int forehand, backhand, overhead;
 
     // Swings //
     //private TextView forehandText, backhandText, overheadText;
@@ -34,8 +33,7 @@ public class MainActivity extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getApplicationContext(), "Main - Click", Toast.LENGTH_LONG).show();
-                //recreate();
+                recreate();
             }
         });
     }

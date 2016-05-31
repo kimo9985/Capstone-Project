@@ -9,24 +9,16 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.BarChart;
-import com.github.mikephil.charting.charts.PieChart;
-import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
-import com.github.mikephil.charting.data.ChartData;
-import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.data.PieData;
-import com.github.mikephil.charting.data.PieDataSet;
-import com.github.mikephil.charting.highlight.Highlight;
-import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
-import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
-import com.github.mikephil.charting.utils.ColorTemplate;
-import com.google.android.gms.wearable.WearableListenerService;
+import com.github.mikephil.charting.formatter.ValueFormatter;
 
 import java.util.ArrayList;
 
@@ -42,12 +34,9 @@ public class ChartFragment extends Fragment {
     private static int forehand, backhand, overhead;
     private BarChart chart;
 
-    //private int[] yData = { 5, 10, 7 };
-    //private String[] xData = { "ForeHand", "BackHand", "OverHead" };
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+                             final Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.chart_fragment, container, false);
 
         SharedPreferences forehands = this.getActivity().getSharedPreferences
@@ -82,7 +71,10 @@ public class ChartFragment extends Fragment {
         xAxis.setDrawGridLines(true);
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
 
-
+        ArrayList<String> labels = new ArrayList<String>();
+        labels.add("Forehand");
+        labels.add("Backhand");
+        labels.add("Overhead");
 
         // Y-Axis //
         YAxis leftAxis = chart.getAxisLeft();
@@ -94,25 +86,22 @@ public class ChartFragment extends Fragment {
         leftAxis.setLabelCount(3, true);
         chart.getAxisRight().setEnabled(false);
 
-
         ArrayList<BarEntry> yValues = new ArrayList<>();
-        yValues.add(new BarEntry(4, 0));
-        yValues.add(new BarEntry(18, 1));
-        yValues.add(new BarEntry(6, 2));
+        yValues.add(new BarEntry(forehand, 0));
+        yValues.add(new BarEntry(backhand, 1));
+        yValues.add(new BarEntry(overhead, 2));
 
-        BarDataSet barDataSet = new BarDataSet(yValues, "Swing Tracker");
+        BarDataSet barDataSet = new BarDataSet(yValues, "# of Swings");
+        barDataSet.setValueTextSize(12);
 
-        ArrayList<String> labels = new ArrayList<String>();
-        labels.add("Forehand");
-        labels.add("Backhand");
-        labels.add("Overhead");
-
+        // Set Data and Redraw //
         BarData data = new BarData(labels, barDataSet);
+        data.setValueFormatter(new MyValueFormatter());
         chart.setData(data);
-        chart.setDescription("Swing Counter");
         chart.animateXY(2000, 2000);
         chart.invalidate();
 
         return view;
     }
+
 }
