@@ -66,4 +66,9 @@ public class Utilities {
             SharedPreferences prefs = context.getSharedPreferences("com.swingtracker.GRIP", Context.MODE_PRIVATE);
             prefs.edit().putBoolean(SP_KEY_GRIP, grip).apply();
     }
+
+    public static boolean getPrefGrip(Context context) {
+        SharedPreferences prefs = context.getSharedPreferences("com.swingtracker.GRIP", Context.MODE_PRIVATE);
+        return prefs.getBoolean(SP_KEY_GRIP, false);
+    }
 }

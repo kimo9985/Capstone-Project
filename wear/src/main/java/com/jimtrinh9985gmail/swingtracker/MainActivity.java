@@ -1,31 +1,17 @@
 package com.jimtrinh9985gmail.swingtracker;
 
 import android.app.Activity;
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.os.BatteryManager;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.Vibrator;
-import android.preference.ListPreference;
-import android.preference.Preference;
-import android.preference.PreferenceManager;
-import android.renderscript.Sampler;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
-import android.view.WindowManager;
 import android.widget.ImageView;
-import android.widget.TextView;
 
-import java.sql.Time;
-import java.sql.Timestamp;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -62,12 +48,16 @@ public class MainActivity extends Activity implements SensorEventListener {
     private int foreHandCount = 0;
     private int backHandCount = 0;
     private int overHeadCount = 0;
+    public boolean gripSetting;
 
     // Accelerometer //
     private float lastX, lastY, lastZ;
     private float deltaX = 0;
     private float deltaY = 0;
     private float deltaZ = 0;
+    private float deltaTempX = 0;
+    private float deltaTempY = 0;
+    private float deltaTempZ = 0;
     private float deltaXLPF = 0;
     private float deltaYLPF = 0;
     private float deltaZLPF = 0;
@@ -81,6 +71,9 @@ public class MainActivity extends Activity implements SensorEventListener {
     private float gravityX = 0;
     private float gravityY = 0;
     private float gravityZ = 0;
+    private float gravityTempX = 0;
+    private float gravityTempY = 0;
+    private float gravityTempZ = 0;
 
     // Gyroscope //
     private float deltaGX = 0;
@@ -104,9 +97,11 @@ public class MainActivity extends Activity implements SensorEventListener {
         WearPrefs.init(this, "com.swingtracker.BACKHAND");
         WearPrefs.init(this, "com.swingtracker.OVERHEAD");
 
+        gripSetting = Utilities.getPrefGrip(this);
         foreHandCount = Utilities.getPrefForehand(this);
         backHandCount = Utilities.getPrefBackhand(this);
         overHeadCount = Utilities.getPrefOverhead(this);
+        Log.d(LOG_TAG, "MainAcitivity Grip: " + gripSetting);
         renewTimer();
 
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
@@ -114,13 +109,13 @@ public class MainActivity extends Activity implements SensorEventListener {
         if (sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER) != null) {
 
             sensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-            sensorManager.registerListener(this, sensor, TIME_MS);
+            sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_NORMAL);
 
             sensor = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE_UNCALIBRATED);
-            sensorManager.registerListener(this, sensor, TIME_MS);
+            sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_NORMAL);
 
             sensor = sensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
-            sensorManager.registerListener(this, sensor, TIME_MS);
+            sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_NORMAL);
 
         } else {
             Log.d(LOG_TAG, "Failed to initiate Accelerometer!");
@@ -165,6 +160,9 @@ public class MainActivity extends Activity implements SensorEventListener {
 
         // Get sensor readings //
         if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+            deltaTempX = event.values[0];
+            deltaTempY = event.values[1];
+            deltaTempZ = event.values[2];
             deltaX = Math.abs(lastX - event.values[0]);
             deltaY = Math.abs(lastY - event.values[1]);
             deltaZ = Math.abs(lastZ - event.values[2]);
@@ -191,6 +189,10 @@ public class MainActivity extends Activity implements SensorEventListener {
 
     public void calculateReading() {
 
+        gravityTempX = gravityX;
+        gravityTempY = gravityY;
+        gravityTempZ = gravityZ;
+
         // Apply Low-Pass Filter //
         gravityX = alpha * gravityX + oneMinusAlpha * deltaX;
         gravityY = alpha * gravityY + oneMinusAlpha * deltaY;
@@ -214,10 +216,10 @@ public class MainActivity extends Activity implements SensorEventListener {
 
     public void determineSwing() {
 
-        if ((timeStamp - mLastTime) > TIME_THRESHOLD_NS && Utilities.SP_KEY_GRIP.equals(true)) {
+        if ((timeStamp - mLastTime) > TIME_THRESHOLD_NS && gripSetting) {
             determineSwingForRighty();
         } else {
-            if ((timeStamp - mLastTime) > TIME_THRESHOLD_NS && Utilities.SP_KEY_GRIP.equals(false)) {
+            if ((timeStamp - mLastTime) > TIME_THRESHOLD_NS && !gripSetting) {
                 determineSwingForLefty();
             } else {
                 return;
@@ -226,33 +228,33 @@ public class MainActivity extends Activity implements SensorEventListener {
     }
 
     public void determineSwingForRighty() {
-        if (deltaXLPF > 4 && deltaGZLPF > -30 && deltaLX > 0) {
+        if (deltaXLPF > 6 && deltaGZLPF > -30 && deltaLX > 0) {
             backHandCount++;
             setBackhandCounter(backHandCount);
             vibrate();
-            Log.d(LOG_TAG, "Righty Backhand:");
+            Log.d(LOG_TAG, "Righty Backhand: " + deltaTempX + " " + deltaTempY + " " + deltaTempZ);
             Log.d(LOG_TAG, "DeltaXLPF: " + deltaXLPF + " " + "DeltaYLPF: " + deltaYLPF + " " + "DeltaZLPF: " + deltaZLPF);
             Log.d(LOG_TAG, "DeltaGYLPF: " + deltaGYLPF + " " + "DeltaGX: " + deltaGXLPF + " " + "DeltaGZ: " + deltaGZLPF);
             Log.d(LOG_TAG, "GravityX: " + gravityX + " " + "GravityY: " + gravityY + " " + "GravityZ: " + gravityZ);
             Log.d(LOG_TAG, "Linear Acc X,Y,Z: " + deltaLX + " " + deltaLY + " " + deltaLZ);
             mLastTime = timeStamp;
         }
-        if (deltaXLPF > 4 && deltaGZLPF < -40 && deltaLX > 0) {
+        if (deltaXLPF > 6 && deltaGZLPF < -40 && deltaLX > 0) {
             foreHandCount++;
             setForehandCounter(foreHandCount);
             vibrate();
-            Log.d(LOG_TAG, "Righty Forehand:");
+            Log.d(LOG_TAG, "Righty Forehand: " + deltaTempX + " " + deltaTempY + " " + deltaTempZ);
             Log.d(LOG_TAG, "DeltaXLPF: " + deltaXLPF + " " + "DeltaYLPF: " + deltaYLPF + " " + "DeltaZLPF: " + deltaZLPF);
             Log.d(LOG_TAG, "DeltaGYLPF: " + deltaGYLPF + " " + "DeltaGX: " + deltaGXLPF + " " + "DeltaGZ: " + deltaGZLPF);
             Log.d(LOG_TAG, "GravityX: " + gravityX + " " + "GravityY: " + gravityY + " " + "GravityZ: " + gravityZ);
             Log.d(LOG_TAG, "Linear Acc X,Y,Z: " + deltaLX + " " + deltaLY + " " + deltaLZ);
             mLastTime = timeStamp;
         }
-        if (deltaXLPF > 4 && deltaGZLPF > -30 && deltaLX < -2) {
+        if (deltaXLPF > 6 && deltaGZLPF > -30 && deltaLZ < 0) {
             overHeadCount++;
             setOverheadCounter(overHeadCount);
             vibrate();
-            Log.d(LOG_TAG, "Righty Overhead:");
+            Log.d(LOG_TAG, "Righty Overhead: " + deltaTempX + " " + deltaTempY + " " + deltaTempZ);
             Log.d(LOG_TAG, "DeltaXLPF: " + deltaXLPF + " " + "DeltaYLPF: " + deltaYLPF + " " + "DeltaZLPF: " + deltaZLPF);
             Log.d(LOG_TAG, "DeltaGYLPF: " + deltaGYLPF + " " + "DeltaGX: " + deltaGXLPF + " " + "DeltaGZ: " + deltaGZLPF);
             Log.d(LOG_TAG, "GravityX: " + gravityX + " " + "GravityY: " + gravityY + " " + "GravityZ: " + gravityZ);
@@ -264,33 +266,33 @@ public class MainActivity extends Activity implements SensorEventListener {
     }
 
     public void determineSwingForLefty() {
-        if (deltaXLPF > 4 && deltaGZLPF > -30 && deltaLX > 0) {
+        if (deltaXLPF > 5 && deltaGZLPF > -30 && deltaLX > 0) {
             foreHandCount++;
             setBackhandCounter(backHandCount);
             vibrate();
-            Log.d(LOG_TAG, "Righty Forehand:");
+            Log.d(LOG_TAG, "Lefty Forehand: " + gravityTempX + " " + gravityTempY + " " + gravityTempZ);
             Log.d(LOG_TAG, "DeltaXLPF: " + deltaXLPF + " " + "DeltaYLPF: " + deltaYLPF + " " + "DeltaZLPF: " + deltaZLPF);
             Log.d(LOG_TAG, "DeltaGYLPF: " + deltaGYLPF + " " + "DeltaGX: " + deltaGXLPF + " " + "DeltaGZ: " + deltaGZLPF);
             Log.d(LOG_TAG, "GravityX: " + gravityX + " " + "GravityY: " + gravityY + " " + "GravityZ: " + gravityZ);
             Log.d(LOG_TAG, "Linear Acc X,Y,Z: " + deltaLX + " " + deltaLY + " " + deltaLZ);
             mLastTime = timeStamp;
         }
-        if (deltaXLPF > 4 && deltaGZLPF < -40 && deltaLX > 0) {
+        if (deltaXLPF > 5 && deltaGZLPF < -40 && deltaLX > 0) {
             backHandCount++;
             setForehandCounter(foreHandCount);
             vibrate();
-            Log.d(LOG_TAG, "Righty Backhand:");
+            Log.d(LOG_TAG, "Lefty Backhand: " + gravityTempX + " " + gravityTempY + " " + gravityTempZ);
             Log.d(LOG_TAG, "DeltaXLPF: " + deltaXLPF + " " + "DeltaYLPF: " + deltaYLPF + " " + "DeltaZLPF: " + deltaZLPF);
             Log.d(LOG_TAG, "DeltaGYLPF: " + deltaGYLPF + " " + "DeltaGX: " + deltaGXLPF + " " + "DeltaGZ: " + deltaGZLPF);
             Log.d(LOG_TAG, "GravityX: " + gravityX + " " + "GravityY: " + gravityY + " " + "GravityZ: " + gravityZ);
             Log.d(LOG_TAG, "Linear Acc X,Y,Z: " + deltaLX + " " + deltaLY + " " + deltaLZ);
             mLastTime = timeStamp;
         }
-        if (deltaXLPF > 4 && deltaGZLPF > -30 && deltaLX < -2) {
+        if (deltaXLPF > 5 && deltaGZLPF > -30 && deltaLX < -2) {
             overHeadCount++;
             setOverheadCounter(overHeadCount);
             vibrate();
-            Log.d(LOG_TAG, "Righty Overhead:");
+            Log.d(LOG_TAG, "Lefty Overhead: " + gravityTempX + " " + gravityTempY + " " + gravityTempZ);
             Log.d(LOG_TAG, "DeltaXLPF: " + deltaXLPF + " " + "DeltaYLPF: " + deltaYLPF + " " + "DeltaZLPF: " + deltaZLPF);
             Log.d(LOG_TAG, "DeltaGYLPF: " + deltaGYLPF + " " + "DeltaGX: " + deltaGXLPF + " " + "DeltaGZ: " + deltaGZLPF);
             Log.d(LOG_TAG, "GravityX: " + gravityX + " " + "GravityY: " + gravityY + " " + "GravityZ: " + gravityZ);
@@ -322,6 +324,12 @@ public class MainActivity extends Activity implements SensorEventListener {
         setBackhandCounter(0);
         setOverheadCounter(0);
         renewTimer();
+    }
+
+    public void reinitializeGrip() {
+        gripSetting = Utilities.getPrefGrip(this);
+        renewTimer();
+        Log.d(LOG_TAG, "Re-Initialize Grip: " + gripSetting);
     }
 
     private void vibrate() {

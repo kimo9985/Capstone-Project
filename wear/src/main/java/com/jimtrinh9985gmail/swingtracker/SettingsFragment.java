@@ -24,6 +24,7 @@ public class SettingsFragment extends Fragment {
 
     Button resetButton;
     Switch grip;
+    private boolean gr;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -42,10 +43,14 @@ public class SettingsFragment extends Fragment {
                 getActivity().MODE_PRIVATE);
         int overhead = overheads.getInt("com.swingtracker.OVERHEAD", 0);
 
+        SharedPreferences grips = getActivity().getSharedPreferences("com.swingtracker.GRIP",
+                getActivity().MODE_PRIVATE);
+        gr = grips.getBoolean("com.swingtracker.GRIP", false);
+
         Log.d(LOG_TAG, "Wearable Forehand: " + forehand);
         Log.d(LOG_TAG, "Wearable Backhand: " + backhand);
         Log.d(LOG_TAG, "Wearable Overhead: " + overhead);
-        Log.d(LOG_TAG, "Grip1: " + grip);
+        Log.d(LOG_TAG, "Grip: " + gr);
 
         resetButton = (Button) view.findViewById(R.id.reset_button);
         resetButton.setOnClickListener(new View.OnClickListener() {
@@ -56,24 +61,27 @@ public class SettingsFragment extends Fragment {
         });
 
         grip = (Switch) view.findViewById(R.id.switch1);
-        initializeGrip();
-        Log.d(LOG_TAG, "Grip2: " + grip);
+        showGrip();
         grip.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
                     Utilities.savePrefGrip(getActivity(), true);
+                    ((MainActivity) getActivity()).reinitializeGrip();
                 } else {
                     Utilities.savePrefGrip(getActivity(), false);
+                    ((MainActivity) getActivity()).reinitializeGrip();
                 }
             }
         });
         return view;
     }
 
-    public void initializeGrip() {
-        if (grip == null) {
-            Utilities.savePrefGrip(getActivity(), true);
+    private void showGrip() {
+        if (gr) {
+            grip.setChecked(true);
+        } else {
+            grip.setChecked(false);
         }
     }
 }
