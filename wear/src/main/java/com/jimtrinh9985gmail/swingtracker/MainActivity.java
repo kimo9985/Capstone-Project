@@ -84,7 +84,7 @@ public class MainActivity extends Activity implements SensorEventListener {
     private float deltaGZLPF = 0;
 
     // Low-Pass Filter //
-    private float alpha = .3f;
+    private float alpha = .5f;
     private float oneMinusAlpha = (1.0f - alpha);
 
     @Override
@@ -109,13 +109,13 @@ public class MainActivity extends Activity implements SensorEventListener {
         if (sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER) != null) {
 
             sensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-            sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_NORMAL);
+            sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_FASTEST);
 
             sensor = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE_UNCALIBRATED);
-            sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_NORMAL);
+            sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_FASTEST);
 
             sensor = sensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
-            sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_NORMAL);
+            sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_FASTEST);
 
         } else {
             Log.d(LOG_TAG, "Failed to initiate Accelerometer!");
@@ -160,9 +160,9 @@ public class MainActivity extends Activity implements SensorEventListener {
 
         // Get sensor readings //
         if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
-            deltaTempX = event.values[0];
-            deltaTempY = event.values[1];
-            deltaTempZ = event.values[2];
+            deltaTempX = (lastX - event.values[0]);
+            deltaTempY = (lastY - event.values[1]);
+            deltaTempZ = (lastZ - event.values[2]);
             deltaX = Math.abs(lastX - event.values[0]);
             deltaY = Math.abs(lastY - event.values[1]);
             deltaZ = Math.abs(lastZ - event.values[2]);
@@ -183,7 +183,6 @@ public class MainActivity extends Activity implements SensorEventListener {
             deltaLY = event.values[1];
             deltaLZ = event.values[2];
         }
-
         calculateReading();
     }
 
@@ -215,93 +214,78 @@ public class MainActivity extends Activity implements SensorEventListener {
     }
 
     public void determineSwing() {
-
-        if ((timeStamp - mLastTime) > TIME_THRESHOLD_NS && gripSetting) {
-            determineSwingForRighty();
-        } else {
-            if ((timeStamp - mLastTime) > TIME_THRESHOLD_NS && !gripSetting) {
-                determineSwingForLefty();
+        if ((timeStamp - mLastTime) > TIME_THRESHOLD_NS) {
+            if (gripSetting) {
+                determineSwingForRighty();
             } else {
-                return;
+                determineSwingForLefty();
             }
         }
     }
+
+//    public void determineSwing() {
+//
+//        if ((timeStamp - mLastTime) > TIME_THRESHOLD_NS && gripSetting) {
+//            determineSwingForRighty();
+//        } else {
+//            if ((timeStamp - mLastTime) > TIME_THRESHOLD_NS && !gripSetting) {
+//                determineSwingForLefty();
+//            } else {
+//                return;
+//            }
+//        }
+//    }
 
     public void determineSwingForRighty() {
         if (deltaXLPF > 6 && deltaGZLPF > -30 && deltaLX > 0) {
             backHandCount++;
             setBackhandCounter(backHandCount);
             vibrate();
-            Log.d(LOG_TAG, "Righty Backhand: " + deltaTempX + " " + deltaTempY + " " + deltaTempZ);
-            Log.d(LOG_TAG, "DeltaXLPF: " + deltaXLPF + " " + "DeltaYLPF: " + deltaYLPF + " " + "DeltaZLPF: " + deltaZLPF);
-            Log.d(LOG_TAG, "DeltaGYLPF: " + deltaGYLPF + " " + "DeltaGX: " + deltaGXLPF + " " + "DeltaGZ: " + deltaGZLPF);
-            Log.d(LOG_TAG, "GravityX: " + gravityX + " " + "GravityY: " + gravityY + " " + "GravityZ: " + gravityZ);
-            Log.d(LOG_TAG, "Linear Acc X,Y,Z: " + deltaLX + " " + deltaLY + " " + deltaLZ);
             mLastTime = timeStamp;
         }
         if (deltaXLPF > 6 && deltaGZLPF < -40 && deltaLX > 0) {
-            foreHandCount++;
-            setForehandCounter(foreHandCount);
-            vibrate();
-            Log.d(LOG_TAG, "Righty Forehand: " + deltaTempX + " " + deltaTempY + " " + deltaTempZ);
-            Log.d(LOG_TAG, "DeltaXLPF: " + deltaXLPF + " " + "DeltaYLPF: " + deltaYLPF + " " + "DeltaZLPF: " + deltaZLPF);
-            Log.d(LOG_TAG, "DeltaGYLPF: " + deltaGYLPF + " " + "DeltaGX: " + deltaGXLPF + " " + "DeltaGZ: " + deltaGZLPF);
-            Log.d(LOG_TAG, "GravityX: " + gravityX + " " + "GravityY: " + gravityY + " " + "GravityZ: " + gravityZ);
-            Log.d(LOG_TAG, "Linear Acc X,Y,Z: " + deltaLX + " " + deltaLY + " " + deltaLZ);
-            mLastTime = timeStamp;
-        }
-        if (deltaXLPF > 6 && deltaGZLPF > -30 && deltaLZ < 0) {
-            overHeadCount++;
-            setOverheadCounter(overHeadCount);
-            vibrate();
-            Log.d(LOG_TAG, "Righty Overhead: " + deltaTempX + " " + deltaTempY + " " + deltaTempZ);
-            Log.d(LOG_TAG, "DeltaXLPF: " + deltaXLPF + " " + "DeltaYLPF: " + deltaYLPF + " " + "DeltaZLPF: " + deltaZLPF);
-            Log.d(LOG_TAG, "DeltaGYLPF: " + deltaGYLPF + " " + "DeltaGX: " + deltaGXLPF + " " + "DeltaGZ: " + deltaGZLPF);
-            Log.d(LOG_TAG, "GravityX: " + gravityX + " " + "GravityY: " + gravityY + " " + "GravityZ: " + gravityZ);
-            Log.d(LOG_TAG, "Linear Acc X,Y,Z: " + deltaLX + " " + deltaLY + " " + deltaLZ);
-            mLastTime = timeStamp;
+            if (deltaLY < -7.5) {
+                foreHandCount++;
+                setForehandCounter(foreHandCount);
+                vibrate();
+                mLastTime = timeStamp;
+            } else if (deltaLY > -7.5) {
+                overHeadCount++;
+                setOverheadCounter(overHeadCount);
+                vibrate();
+                mLastTime = timeStamp;
+            }
         }
         renewTimer();
-        return;
     }
 
     public void determineSwingForLefty() {
-        if (deltaXLPF > 5 && deltaGZLPF > -30 && deltaLX > 0) {
-            foreHandCount++;
+        if (deltaXLPF > 6 && deltaGZLPF > -30 && deltaLX < 0) {
+            backHandCount++;
             setBackhandCounter(backHandCount);
             vibrate();
-            Log.d(LOG_TAG, "Lefty Forehand: " + gravityTempX + " " + gravityTempY + " " + gravityTempZ);
-            Log.d(LOG_TAG, "DeltaXLPF: " + deltaXLPF + " " + "DeltaYLPF: " + deltaYLPF + " " + "DeltaZLPF: " + deltaZLPF);
-            Log.d(LOG_TAG, "DeltaGYLPF: " + deltaGYLPF + " " + "DeltaGX: " + deltaGXLPF + " " + "DeltaGZ: " + deltaGZLPF);
-            Log.d(LOG_TAG, "GravityX: " + gravityX + " " + "GravityY: " + gravityY + " " + "GravityZ: " + gravityZ);
-            Log.d(LOG_TAG, "Linear Acc X,Y,Z: " + deltaLX + " " + deltaLY + " " + deltaLZ);
+            Log.d(LOG_TAG, "Backhand L - Linear Acc X,Y,Z: " + deltaLX + " " + deltaLY + " " + deltaLZ);
+            Log.d(LOG_TAG, "DeltaGX: " + deltaGXLPF + " " + "DeltaGYLPF: " + deltaGYLPF + " " + "DeltaGZ: " + deltaGZLPF);
             mLastTime = timeStamp;
         }
-        if (deltaXLPF > 5 && deltaGZLPF < -40 && deltaLX > 0) {
-            backHandCount++;
-            setForehandCounter(foreHandCount);
-            vibrate();
-            Log.d(LOG_TAG, "Lefty Backhand: " + gravityTempX + " " + gravityTempY + " " + gravityTempZ);
-            Log.d(LOG_TAG, "DeltaXLPF: " + deltaXLPF + " " + "DeltaYLPF: " + deltaYLPF + " " + "DeltaZLPF: " + deltaZLPF);
-            Log.d(LOG_TAG, "DeltaGYLPF: " + deltaGYLPF + " " + "DeltaGX: " + deltaGXLPF + " " + "DeltaGZ: " + deltaGZLPF);
-            Log.d(LOG_TAG, "GravityX: " + gravityX + " " + "GravityY: " + gravityY + " " + "GravityZ: " + gravityZ);
-            Log.d(LOG_TAG, "Linear Acc X,Y,Z: " + deltaLX + " " + deltaLY + " " + deltaLZ);
-            mLastTime = timeStamp;
-        }
-        if (deltaXLPF > 5 && deltaGZLPF > -30 && deltaLX < -2) {
-            overHeadCount++;
-            setOverheadCounter(overHeadCount);
-            vibrate();
-            Log.d(LOG_TAG, "Lefty Overhead: " + gravityTempX + " " + gravityTempY + " " + gravityTempZ);
-            Log.d(LOG_TAG, "DeltaXLPF: " + deltaXLPF + " " + "DeltaYLPF: " + deltaYLPF + " " + "DeltaZLPF: " + deltaZLPF);
-            Log.d(LOG_TAG, "DeltaGYLPF: " + deltaGYLPF + " " + "DeltaGX: " + deltaGXLPF + " " + "DeltaGZ: " + deltaGZLPF);
-            Log.d(LOG_TAG, "GravityX: " + gravityX + " " + "GravityY: " + gravityY + " " + "GravityZ: " + gravityZ);
-            Log.d(LOG_TAG, "Linear Acc X,Y,Z: " + deltaLX + " " + deltaLY + " " + deltaLZ);
-            mLastTime = timeStamp;
+        if (deltaXLPF > 6 && deltaGZLPF < -40 && deltaLX < 0) {
+            if (deltaLY < -7.5) {
+                foreHandCount++;
+                setForehandCounter(foreHandCount);
+                vibrate();
+                Log.d(LOG_TAG, "Forehand L - Linear Acc X,Y,Z: " + deltaLX + " " + deltaLY + " " + deltaLZ);
+                Log.d(LOG_TAG, "DeltaGX: " + deltaGXLPF + " " + "DeltaGYLPF: " + deltaGYLPF + " " + "DeltaGZ: " + deltaGZLPF);
+                mLastTime = timeStamp;
+            } else if (deltaLY > -7.5) {
+                overHeadCount++;
+                setOverheadCounter(overHeadCount);
+                vibrate();
+                Log.d(LOG_TAG, "Overhead L - Linear Acc X,Y,Z: " + deltaLX + " " + deltaLY + " " + deltaLZ);
+                Log.d(LOG_TAG, "DeltaGX: " + deltaGXLPF + " " + "DeltaGYLPF: " + deltaGYLPF + " " + "DeltaGZ: " + deltaGZLPF);
+                mLastTime = timeStamp;
+            }
         }
         renewTimer();
-        return;
-
     }
 
     public void setForehandCounter(int i) {
