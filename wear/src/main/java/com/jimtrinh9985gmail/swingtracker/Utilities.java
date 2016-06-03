@@ -2,7 +2,6 @@ package com.jimtrinh9985gmail.swingtracker;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.util.Log;
 
 
 /**
@@ -16,7 +15,6 @@ public class Utilities {
     public static final String SP_KEY_BACKHAND = "com.swingtracker.BACKHAND";
     public static final String SP_KEY_OVERHEAD = "com.swingtracker.OVERHEAD";
     public static final String SP_KEY_GRIP = "com.swingtracker.GRIP";
-
 
     public static void savePrefForehand(Context context, int value) {
         SharedPreferences prefs = context.getSharedPreferences("com.swingtracker.FOREHAND",

@@ -55,9 +55,6 @@ public class MainActivity extends Activity implements SensorEventListener {
     private float deltaX = 0;
     private float deltaY = 0;
     private float deltaZ = 0;
-    private float deltaTempX = 0;
-    private float deltaTempY = 0;
-    private float deltaTempZ = 0;
     private float deltaXLPF = 0;
     private float deltaYLPF = 0;
     private float deltaZLPF = 0;
@@ -71,9 +68,6 @@ public class MainActivity extends Activity implements SensorEventListener {
     private float gravityX = 0;
     private float gravityY = 0;
     private float gravityZ = 0;
-    private float gravityTempX = 0;
-    private float gravityTempY = 0;
-    private float gravityTempZ = 0;
 
     // Gyroscope //
     private float deltaGX = 0;
@@ -101,7 +95,6 @@ public class MainActivity extends Activity implements SensorEventListener {
         foreHandCount = Utilities.getPrefForehand(this);
         backHandCount = Utilities.getPrefBackhand(this);
         overHeadCount = Utilities.getPrefOverhead(this);
-        Log.d(LOG_TAG, "MainAcitivity Grip: " + gripSetting);
         renewTimer();
 
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
@@ -149,7 +142,6 @@ public class MainActivity extends Activity implements SensorEventListener {
             public void onPageScrollStateChanged(int i) {
             }
         });
-
         viewPager.setAdapter(adapter);
     }
 
@@ -160,9 +152,6 @@ public class MainActivity extends Activity implements SensorEventListener {
 
         // Get sensor readings //
         if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
-            deltaTempX = (lastX - event.values[0]);
-            deltaTempY = (lastY - event.values[1]);
-            deltaTempZ = (lastZ - event.values[2]);
             deltaX = Math.abs(lastX - event.values[0]);
             deltaY = Math.abs(lastY - event.values[1]);
             deltaZ = Math.abs(lastZ - event.values[2]);
@@ -187,10 +176,6 @@ public class MainActivity extends Activity implements SensorEventListener {
     }
 
     public void calculateReading() {
-
-        gravityTempX = gravityX;
-        gravityTempY = gravityY;
-        gravityTempZ = gravityZ;
 
         // Apply Low-Pass Filter //
         gravityX = alpha * gravityX + oneMinusAlpha * deltaX;
@@ -222,19 +207,6 @@ public class MainActivity extends Activity implements SensorEventListener {
             }
         }
     }
-
-//    public void determineSwing() {
-//
-//        if ((timeStamp - mLastTime) > TIME_THRESHOLD_NS && gripSetting) {
-//            determineSwingForRighty();
-//        } else {
-//            if ((timeStamp - mLastTime) > TIME_THRESHOLD_NS && !gripSetting) {
-//                determineSwingForLefty();
-//            } else {
-//                return;
-//            }
-//        }
-//    }
 
     public void determineSwingForRighty() {
         if (deltaXLPF > 6 && deltaGZLPF > -30 && deltaLX > 0) {
