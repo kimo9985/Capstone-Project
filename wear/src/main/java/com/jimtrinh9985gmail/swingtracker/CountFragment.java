@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.BatteryManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,8 +35,8 @@ public class CountFragment extends Fragment {
         forehandText = (TextView) view.findViewById(R.id.forehand_count);
         backhandText = (TextView) view.findViewById(R.id.backhand_count);
         overheadText = (TextView) view.findViewById(R.id.overhead_count);
-        battery = (TextView) view.findViewById(R.id.battery_level);
 
+        battery = (TextView) view.findViewById(R.id.battery_level);
         getActivity().registerReceiver(receiver, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
 
         setForehandCounter(Utilities.getPrefForehand(getActivity()));
@@ -58,6 +59,7 @@ public class CountFragment extends Fragment {
     }
 
     public void setForehandCounter(int i) {
+        Log.d(LOG_TAG, "SetForehandCounter: " + i);
         setForehandCounter(i < 0 ? "0" : String.valueOf(i));
     }
 

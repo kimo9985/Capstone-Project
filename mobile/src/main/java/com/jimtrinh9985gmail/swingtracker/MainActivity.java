@@ -9,16 +9,7 @@ import wearprefs.WearPrefs;
 
 public class MainActivity extends AppCompatActivity {
 
-    public final String LOG_TAG = MainActivity.class.getSimpleName();
-
     private Button button;
-
-    //private static int forehand, backhand, overhead;
-
-    // Swings //
-    //private TextView forehandText, backhandText, overheadText;
-
-    //private static final String SP_KEY_FOREHAND = "forehandCount";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

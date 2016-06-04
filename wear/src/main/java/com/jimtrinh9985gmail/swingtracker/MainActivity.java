@@ -7,7 +7,6 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
-import android.os.Vibrator;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.widget.ImageView;
@@ -23,7 +22,6 @@ public class MainActivity extends Activity implements SensorEventListener {
     public final String LOG_TAG = MainActivity.class.getSimpleName();
 
     // Delay between sensor readings //
-    private static final int TIME_MS = 400000;  // in microseconds (.4 seconds)
     private static final long TIME_THRESHOLD_NS = 400000000;  // in nanoseconds (.4 seconds)
     private long mLastTime = 0;
     private long timeStamp;
@@ -99,7 +97,7 @@ public class MainActivity extends Activity implements SensorEventListener {
 
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
 
-        if (sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER) != null) {
+        if (sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER) != null ) {
 
             sensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
             sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_FASTEST);
@@ -111,7 +109,7 @@ public class MainActivity extends Activity implements SensorEventListener {
             sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_FASTEST);
 
         } else {
-            Log.d(LOG_TAG, "Failed to initiate Accelerometer!");
+            Log.d(LOG_TAG, "Failed to initiate Accelerometer");
         }
     }
 
@@ -212,19 +210,16 @@ public class MainActivity extends Activity implements SensorEventListener {
         if (deltaXLPF > 6 && deltaGZLPF > -30 && deltaLX > 0) {
             backHandCount++;
             setBackhandCounter(backHandCount);
-            vibrate();
             mLastTime = timeStamp;
         }
         if (deltaXLPF > 6 && deltaGZLPF < -40 && deltaLX > 0) {
             if (deltaLY < -7.5) {
                 foreHandCount++;
                 setForehandCounter(foreHandCount);
-                vibrate();
                 mLastTime = timeStamp;
             } else if (deltaLY > -7.5) {
                 overHeadCount++;
                 setOverheadCounter(overHeadCount);
-                vibrate();
                 mLastTime = timeStamp;
             }
         }
@@ -235,25 +230,16 @@ public class MainActivity extends Activity implements SensorEventListener {
         if (deltaXLPF > 6 && deltaGZLPF > -30 && deltaLX < 0) {
             backHandCount++;
             setBackhandCounter(backHandCount);
-            vibrate();
-            Log.d(LOG_TAG, "Backhand L - Linear Acc X,Y,Z: " + deltaLX + " " + deltaLY + " " + deltaLZ);
-            Log.d(LOG_TAG, "DeltaGX: " + deltaGXLPF + " " + "DeltaGYLPF: " + deltaGYLPF + " " + "DeltaGZ: " + deltaGZLPF);
             mLastTime = timeStamp;
         }
         if (deltaXLPF > 6 && deltaGZLPF < -40 && deltaLX < 0) {
             if (deltaLY < -7.5) {
                 foreHandCount++;
                 setForehandCounter(foreHandCount);
-                vibrate();
-                Log.d(LOG_TAG, "Forehand L - Linear Acc X,Y,Z: " + deltaLX + " " + deltaLY + " " + deltaLZ);
-                Log.d(LOG_TAG, "DeltaGX: " + deltaGXLPF + " " + "DeltaGYLPF: " + deltaGYLPF + " " + "DeltaGZ: " + deltaGZLPF);
                 mLastTime = timeStamp;
             } else if (deltaLY > -7.5) {
                 overHeadCount++;
                 setOverheadCounter(overHeadCount);
-                vibrate();
-                Log.d(LOG_TAG, "Overhead L - Linear Acc X,Y,Z: " + deltaLX + " " + deltaLY + " " + deltaLZ);
-                Log.d(LOG_TAG, "DeltaGX: " + deltaGXLPF + " " + "DeltaGYLPF: " + deltaGYLPF + " " + "DeltaGZ: " + deltaGZLPF);
                 mLastTime = timeStamp;
             }
         }
@@ -276,6 +262,9 @@ public class MainActivity extends Activity implements SensorEventListener {
     }
 
     public void resetCounter() {
+        foreHandCount = 0;
+        backHandCount = 0;
+        overHeadCount = 0;
         setForehandCounter(0);
         setBackhandCounter(0);
         setOverheadCounter(0);
@@ -285,12 +274,6 @@ public class MainActivity extends Activity implements SensorEventListener {
     public void reinitializeGrip() {
         gripSetting = Utilities.getPrefGrip(this);
         renewTimer();
-        Log.d(LOG_TAG, "Re-Initialize Grip: " + gripSetting);
-    }
-
-    private void vibrate() {
-        Vibrator vibe = (Vibrator) getApplicationContext().getSystemService(Context.VIBRATOR_SERVICE);
-        vibe.vibrate(100);
     }
 
     private void renewTimer() {
@@ -336,6 +319,7 @@ public class MainActivity extends Activity implements SensorEventListener {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        sensorManager.unregisterListener(this);
     }
 
     // Set page indicator for ViewPager //

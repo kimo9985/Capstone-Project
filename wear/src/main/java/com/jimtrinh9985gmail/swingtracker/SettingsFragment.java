@@ -28,27 +28,6 @@ public class SettingsFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.setting_layout, container, false);
 
-        SharedPreferences forehands = getActivity().getSharedPreferences("com.swingtracker.FOREHAND",
-                getActivity().MODE_PRIVATE);
-        int forehand = forehands.getInt("com.swingtracker.FOREHAND", 0);
-
-        SharedPreferences backhands = getActivity().getSharedPreferences("com.swingtracker.BACKHAND",
-                getActivity().MODE_PRIVATE);
-        int backhand = backhands.getInt("com.swingtracker.BACKHAND", 0);
-
-        SharedPreferences overheads = getActivity().getSharedPreferences("com.swingtracker.OVERHEAD",
-                getActivity().MODE_PRIVATE);
-        int overhead = overheads.getInt("com.swingtracker.OVERHEAD", 0);
-
-        SharedPreferences grips = getActivity().getSharedPreferences("com.swingtracker.GRIP",
-                getActivity().MODE_PRIVATE);
-        gr = grips.getBoolean("com.swingtracker.GRIP", false);
-
-        Log.d(LOG_TAG, "Wearable Forehand: " + forehand);
-        Log.d(LOG_TAG, "Wearable Backhand: " + backhand);
-        Log.d(LOG_TAG, "Wearable Overhead: " + overhead);
-        Log.d(LOG_TAG, "Grip: " + gr);
-
         resetButton = (Button) view.findViewById(R.id.reset_button);
         resetButton.setOnClickListener(new View.OnClickListener() {
             @Override

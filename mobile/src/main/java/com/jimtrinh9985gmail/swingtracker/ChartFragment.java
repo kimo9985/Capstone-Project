@@ -46,10 +46,6 @@ public class ChartFragment extends Fragment {
                 ("com.swingtracker.OVERHEAD", Context.MODE_PRIVATE);
         overhead = overheads.getInt("com.swingtracker.OVERHEAD", 0);
 
-        Log.d(LOG_TAG, "Frag - Shared Preference Forehand: " + forehand);
-        Log.d(LOG_TAG, "Frag - Shared Preference Backhand: " + backhand);
-        Log.d(LOG_TAG, "Frag - Shared Preference Overhead: " + overhead);
-
         chart = (BarChart) view.findViewById(R.id.chart);
 
         // Chart Styling for BarChart //
