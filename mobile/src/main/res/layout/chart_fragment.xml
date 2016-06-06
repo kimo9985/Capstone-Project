@@ -13,24 +13,40 @@
         android:id="@+id/chart"
         android:background="@color/A400_indigo"
         android:layout_width="match_parent"
-        android:layout_height="500dp" />
+        android:layout_height="450dp" />
 
-    <Button
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingTop="8dp"
-        android:paddingBottom="8dp"
-        android:text="Chart Workout"
-        android:id="@+id/chart_button"
-        android:layout_alignParentBottom="true"
-        android:contentDescription="@string/update_button"
-        android:onClick="true"
-        android:padding="16dp"
-        android:background="@drawable/button"
-        android:textColor="@color/A100_indigo"
         android:layout_below="@+id/chart"
-        android:layout_centerHorizontal="true" />
+        android:orientation="horizontal"
+        android:layout_centerHorizontal="true">
 
+        <Button
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:text="@string/chart_workout"
+            android:id="@+id/chart_button"
+            android:contentDescription="@string/update_button"
+            android:onClick="true"
+            android:background="@drawable/button"
+            android:textColor="@color/A100_indigo"
+            android:layout_gravity="center" />
+
+        <Button
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:text="@string/save_workout"
+            android:id="@+id/save_button"
+            android:layout_marginLeft="8dp"
+            android:contentDescription="@string/update_button"
+            android:onClick="true"
+            android:padding="16dp"
+            android:background="@drawable/button"
+            android:textColor="@color/A100_indigo"
+            android:layout_gravity="center" />
+
+    </LinearLayout>
 </RelativeLayout>
 
 

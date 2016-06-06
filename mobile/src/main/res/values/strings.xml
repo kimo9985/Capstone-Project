@@ -1,4 +1,6 @@
 <resources>
     <string name="app_name">Swing Tracker</string>
     <string name="update_button">Update Chart</string>
+    <string name="chart_workout">Update Chart</string>
+    <string name="save_workout">Save Data</string>
 </resources>
