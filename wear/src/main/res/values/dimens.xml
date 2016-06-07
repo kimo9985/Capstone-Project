@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="pager_image_margin">5dp</dimen>
+    <dimen name="pager_margin_bottom">10dp</dimen>
+    <dimen name="reset_margin_top">40dp</dimen>
+</resources>

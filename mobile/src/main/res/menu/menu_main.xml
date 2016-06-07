@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.jimtrinh9985gmail.swingtracker.MainActivity" >
+
+    <group android:menuCategory="container" >
+        <item
+            android:id="@+id/menu_chart"
+            android:orderInCategory="1"
+            app:showAsAction="collapseActionView"
+            android:title="Chart View" />
+        <item
+            android:id="@+id/menu_profile"
+            android:orderInCategory="2"
+            app:showAsAction="collapseActionView"
+            android:title="Player Profile" />
+    </group>
+</menu>

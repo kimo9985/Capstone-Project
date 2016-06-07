@@ -9,17 +9,17 @@
         android:id="@+id/pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#000" />
+        android:background="@color/black" />
 
     <LinearLayout
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="10dp"
+        android:layout_marginBottom="@dimen/pager_margin_bottom"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
         <ImageView
             android:id="@+id/indicator_0"
-            android:layout_marginRight="5dp"
+            android:layout_marginEnd="@dimen/pager_image_margin"
             android:src="@drawable/full_10"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />

@@ -8,4 +8,10 @@
         <item name="android:textSize">12dp</item>
     </style>
 
+    <style name="Reset" >
+        <item name="android:layout_width">55dp</item>
+        <item name="android:layout_height">55dp</item>
+        <item name="android:textSize">9sp</item>
+    </style>
+
 </resources>

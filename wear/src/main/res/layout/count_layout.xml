@@ -6,8 +6,8 @@
     android:layout_height="match_parent"
     android:background="@color/white"
     android:gravity="center"
-    android:paddingLeft="8dp"
-    android:paddingRight="8dp"
+    android:paddingStart="8dp"
+    android:paddingEnd="8dp"
     tools:context="com.jimtrinh9985gmail.swingtracker.MainActivity"
     tools:deviceIds="wear">
 
@@ -30,8 +30,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             style="@style/Counter"
-            android:paddingLeft="8dp"
-            android:text="0" />
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            android:text="@string/zero" />
 
     </LinearLayout>
 
@@ -54,8 +55,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             style="@style/Counter"
-            android:paddingLeft="8dp"
-            android:text="0" />
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            android:text="@string/zero" />
 
     </LinearLayout>
 
@@ -78,8 +80,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             style="@style/Counter"
-            android:paddingLeft="8dp"
-            android:text="0" />
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            android:text="@string/zero" />
 
     </LinearLayout>
 
@@ -94,7 +97,8 @@
         android:layout_above="@+id/battery_level"
         android:maxHeight="36dp"
         android:maxWidth="36dp"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:contentDescription="@string/player_image" />
 
     <TextView
         android:layout_width="match_parent"

@@ -5,7 +5,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/chart_fragment"
     android:background="@color/A400_indigo"
-
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -23,7 +22,7 @@
         android:layout_centerHorizontal="true">
 
         <Button
-            android:layout_width="150dp"
+            android:layout_width="@dimen/button_width"
             android:layout_height="wrap_content"
             android:text="@string/chart_workout"
             android:id="@+id/chart_button"
@@ -34,11 +33,12 @@
             android:layout_gravity="center" />
 
         <Button
-            android:layout_width="150dp"
+            android:layout_width="@dimen/button_width"
             android:layout_height="wrap_content"
             android:text="@string/save_workout"
             android:id="@+id/save_button"
             android:layout_marginLeft="8dp"
+            android:layout_marginStart="8dp"
             android:contentDescription="@string/update_button"
             android:onClick="true"
             android:padding="16dp"
