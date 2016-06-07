@@ -6,11 +6,16 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.annotation.Nullable;
+import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.squareup.picasso.MemoryPolicy;
+import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
@@ -18,7 +23,7 @@ import java.io.File;
 /**
  * Created by Kimo on 6/6/2016.
  */
-public class ProfileFragment extends Fragment {
+public class ProfileFragment extends AppCompatActivity {
 
     public final String LOG_TAG = ProfileFragment.class.getSimpleName();
 
@@ -26,12 +31,11 @@ public class ProfileFragment extends Fragment {
     private ImageView profileImage;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             final Bundle savedInstanceState) {
-        final View view = inflater.inflate(R.layout.profile_fragment, container, false);
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.profile_fragment);
 
-        profileImage = (ImageView) view.findViewById(R.id.photo);
-        loadPlayerPicture();
+        profileImage = (ImageView) findViewById(R.id.photo);
 
         profileImage.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
@@ -39,10 +43,9 @@ public class ProfileFragment extends Fragment {
                 Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.
                         Images.Media.EXTERNAL_CONTENT_URI);
                 startActivityForResult(intent, LOAD_IMAGE_RESULTS);
-                return false;
+                return true;
             }
         });
-        return view;
     }
 
     @Override
@@ -50,8 +53,8 @@ public class ProfileFragment extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == LOAD_IMAGE_RESULTS && resultCode == Activity.RESULT_OK && data != null) {
-            File image = new File(Environment.getExternalStorageDirectory() + "/img.jpeg");
-            Picasso.with(getActivity())
+            String image = data.getData().toString();
+            Picasso.with(this)
                     .load(image)
                     .noPlaceholder().centerCrop().fit()
                     .error(R.drawable.player1)

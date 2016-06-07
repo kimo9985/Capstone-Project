@@ -4,4 +4,5 @@
     <string name="chart_workout">Update Chart</string>
     <string name="save_workout">Save Data</string>
     <string name="chart_height">450dp</string>
+    <string name="profile_image">Profile Image</string>
 </resources>
