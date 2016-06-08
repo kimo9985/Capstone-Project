@@ -4,5 +4,17 @@
     <string name="chart_workout">Update Chart</string>
     <string name="save_workout">Save Data</string>
     <string name="chart_height">450dp</string>
+
     <string name="profile_image">Profile Image</string>
+    <string name="profile_cd_image">Profile Image</string>
+    <string name="player_name">Novak Djokovic</string>
+    <string name="player_cd_name">Player Name</string>
+    <string name="player_height">Height: 6-2</string>
+    <string name="player_cd_height">Player Height</string>
+    <string name="player_weight">Weight: 176 lbs</string>
+    <string name="player_cd_weight">Player Weight</string>
+    <string name="player_grip">Right Handed</string>
+    <string name="player_cd_grip">Player Grip</string>
+    <string name="player_racket">Racket: Head Graphene XT</string>
+    <string name="player_cd_racket">Player Racket</string>
 </resources>
