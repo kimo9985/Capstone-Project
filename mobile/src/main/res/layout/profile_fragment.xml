@@ -16,8 +16,6 @@
         android:layout_margin="@dimen/layout_margin_8dp"
         style="@style/Card" >
 
-
-
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" >
@@ -39,6 +37,7 @@
                 android:contentDescription="@string/player_cd_name"
                 android:id="@+id/profile_name"
                 style="@style/BoldText"
+                android:longClickable="true"
                 android:layout_gravity="center_horizontal"
                 android:layout_centerHorizontal="true" />
 
@@ -50,6 +49,7 @@
                 android:text="@string/player_height"
                 android:id="@+id/profile_height"
                 style="@style/Text"
+                android:longClickable="true"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true" />
 
@@ -59,10 +59,10 @@
                 android:contentDescription="@string/player_cd_weight"
                 android:text="@string/player_weight"
                 android:id="@+id/profile_weight"
-                android:layout_below="@+id/profile_name"
                 style="@style/Text"
-                android:layout_toRightOf="@+id/profile_racket"
-                android:layout_toEndOf="@+id/profile_racket" />
+                android:longClickable="true"
+                android:layout_alignTop="@+id/profile_grip"
+                android:layout_centerHorizontal="true" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -72,6 +72,7 @@
                 android:id="@+id/profile_grip"
                 android:layout_below="@+id/profile_name"
                 style="@style/Text"
+                android:longClickable="true"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentEnd="true" />
 
@@ -81,6 +82,7 @@
                 android:layout_below="@+id/profile_height"
                 android:contentDescription="@string/player_cd_racket"
                 style="@style/Text"
+                android:longClickable="true"
                 android:text="@string/player_racket"
                 android:id="@+id/profile_racket" />
 
