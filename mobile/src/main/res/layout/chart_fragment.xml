@@ -32,20 +32,6 @@
             android:textColor="@color/A100_indigo"
             android:layout_gravity="center" />
 
-        <Button
-            android:layout_width="@dimen/button_width"
-            android:layout_height="wrap_content"
-            android:text="@string/save_workout"
-            android:id="@+id/save_button"
-            android:layout_marginLeft="8dp"
-            android:layout_marginStart="8dp"
-            android:contentDescription="@string/update_button"
-            android:onClick="true"
-            android:padding="16dp"
-            android:background="@drawable/button"
-            android:textColor="@color/A100_indigo"
-            android:layout_gravity="center" />
-
     </LinearLayout>
 </RelativeLayout>
 

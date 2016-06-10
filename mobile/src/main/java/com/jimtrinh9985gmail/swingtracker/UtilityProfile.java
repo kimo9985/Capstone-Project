@@ -2,6 +2,7 @@ package com.jimtrinh9985gmail.swingtracker;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 /**
  * Created by Kimo on 6/8/2016.

@@ -14,7 +14,7 @@ import wearprefs.WearPrefs;
 
 public class MainActivity extends AppCompatActivity {
 
-    private Button button1, button2;
+    private Button button;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,19 +25,11 @@ public class MainActivity extends AppCompatActivity {
         WearPrefs.init(this, "com.swingtracker.BACKHAND");
         WearPrefs.init(this, "com.swingtracker.OVERHEAD");
 
-        button1 = (Button) findViewById(R.id.chart_button);
-        button1.setOnClickListener(new View.OnClickListener() {
+        button = (Button) findViewById(R.id.chart_button);
+        button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 recreate();
-            }
-        });
-
-        button2 = (Button) findViewById(R.id.save_button);
-        button2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(getApplicationContext(), "Save Button!", Toast.LENGTH_LONG).show();
             }
         });
     }

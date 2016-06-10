@@ -3,9 +3,7 @@ package com.jimtrinh9985gmail.swingtracker;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -16,11 +14,9 @@ import android.widget.EditText;
 public class ProfileUpdate extends AppCompatActivity {
 
     public final String LOG_TAG = ProfileFragment.class.getSimpleName();
-    //private static final String TAG = "result";
 
     public Button button;
     public EditText profileUpdate;
-    //public String result;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,9 +30,9 @@ public class ProfileUpdate extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent returnIntent = new Intent();
-                returnIntent.putExtra("result", profileUpdate.toString());
+                String result = profileUpdate.getText().toString();
+                returnIntent.putExtra("result", result);
                 setResult(Activity.RESULT_OK, returnIntent);
-                Log.d(LOG_TAG, "Return result: " + profileUpdate);
                 finish();
             }
         });
