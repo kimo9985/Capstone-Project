@@ -15,8 +15,14 @@
         <Button
             android:id="@+id/reset_button"
             android:text="@string/reset"
-            android:layout_marginTop="@dimen/reset_margin_top"
-            style="@style/Reset" />
+            android:layout_marginTop="@dimen/button_margin_top"
+            style="@style/Button" />
+
+        <Button
+            android:id="@+id/send_data_button"
+            android:text="@string/send_data"
+            android:layout_marginTop="@dimen/button_margin_top"
+            style="@style/Button" />
 
     </LinearLayout>
 

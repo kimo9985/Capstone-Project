@@ -8,9 +8,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
 
-import wearprefs.WearPrefs;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -20,10 +18,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        WearPrefs.init(this, "com.swingtracker.FOREHAND");
-        WearPrefs.init(this, "com.swingtracker.BACKHAND");
-        WearPrefs.init(this, "com.swingtracker.OVERHEAD");
 
         button = (Button) findViewById(R.id.chart_button);
         button.setOnClickListener(new View.OnClickListener() {

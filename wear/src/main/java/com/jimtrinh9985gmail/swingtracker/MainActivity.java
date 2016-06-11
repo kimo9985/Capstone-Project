@@ -14,8 +14,6 @@ import android.widget.ImageView;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import wearprefs.WearPrefs;
-
 
 public class MainActivity extends Activity implements SensorEventListener {
 
@@ -84,10 +82,6 @@ public class MainActivity extends Activity implements SensorEventListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setupViews();
-
-        WearPrefs.init(this, "com.swingtracker.FOREHAND");
-        WearPrefs.init(this, "com.swingtracker.BACKHAND");
-        WearPrefs.init(this, "com.swingtracker.OVERHEAD");
 
         gripSetting = Utilities.getPrefGrip(this);
         foreHandCount = Utilities.getPrefForehand(this);
