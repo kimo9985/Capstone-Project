@@ -63,6 +63,12 @@ public class SettingsFragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+
+    }
+
     private void showGrip() {
         if (gr) {
             grip.setChecked(true);

@@ -21,10 +21,10 @@ public class MyWearableListenerService extends WearableListenerService {
 
     public final String LOG_TAG = MyWearableListenerService.class.getSimpleName();
 
-    public static final String PROFILE_NAME_KEY = "com.swingtracker.NAME";
-    public static final String PROFILE_HEIGHT_KEY = "com.swingtracker.HEIGHT";
-    public static final String PROFILE_WEIGHT_KEY = "com.swingtracker.WEIGHT";
-    public static final String PROFILE_RACKET_KEY = "com.swingtracker.RACKET";
+    public static final String SP_KEY_NAME = "com.swingtracker.NAME";
+    public static final String SP_KEY_HEIGHT = "com.swingtracker.HEIGHT";
+    public static final String SP_KEY_WEIGHT = "com.swingtracker.WEIGHT";
+    public static final String SP_KEY_RACKET = "com.swingtracker.RACKET";
     public static final String COUNT_KEY = "count";
 
     GoogleApiClient mGoogleApiClient;

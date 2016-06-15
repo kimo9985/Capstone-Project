@@ -15,17 +15,16 @@ import android.widget.ImageView;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.wearable.DataApi;
 import com.google.android.gms.wearable.DataEvent;
 import com.google.android.gms.wearable.DataEventBuffer;
 import com.google.android.gms.wearable.DataMapItem;
-import com.google.android.gms.wearable.PutDataMapRequest;
-import com.google.android.gms.wearable.PutDataRequest;
 import com.google.android.gms.wearable.Wearable;
 
 import java.util.Timer;
 import java.util.TimerTask;
+
+import wearprefs.WearPrefs;
 
 
 public class MainActivity extends Activity implements SensorEventListener,
@@ -103,6 +102,10 @@ public class MainActivity extends Activity implements SensorEventListener,
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setupViews();
+
+        WearPrefs.init(this, "com.swingtracker.FOREHAND");
+        WearPrefs.init(this, "com.swingtracker.BACKHAND");
+        WearPrefs.init(this, "com.swingtracker.OVERHEAD");
 
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addApi(Wearable.API)
@@ -373,16 +376,24 @@ public class MainActivity extends Activity implements SensorEventListener,
                     mCount = dataMapItem.getDataMap()
                             .getInt(MyWearableListenerService.COUNT_KEY);
                     profileName = dataMapItem.getDataMap()
-                            .getString(MyWearableListenerService.PROFILE_NAME_KEY);
+                            .getString(MyWearableListenerService.SP_KEY_NAME);
                     profileHeight = dataMapItem.getDataMap()
-                            .getString(MyWearableListenerService.PROFILE_HEIGHT_KEY);
+                            .getString(MyWearableListenerService.SP_KEY_HEIGHT);
                     profileWeight = dataMapItem.getDataMap()
-                            .getString(MyWearableListenerService.PROFILE_WEIGHT_KEY);
+                            .getString(MyWearableListenerService.SP_KEY_WEIGHT);
                     profileRacket = dataMapItem.getDataMap()
-                            .getString(MyWearableListenerService.PROFILE_RACKET_KEY);
+                            .getString(MyWearableListenerService.SP_KEY_RACKET);
+
+                    Utilities.saveProfileName(this, profileName);
+                    Utilities.saveProfileHeight(this, profileHeight);
+                    Utilities.saveProfileWeight(this, profileWeight);
+                    Utilities.saveProfileRacket(this, profileRacket);
 
                     Log.d(LOG_TAG, "mCount: " + mCount);
                     Log.d(LOG_TAG, "Profile Name: " + profileName);
+                    Log.d(LOG_TAG, "Profile Height: " + profileHeight);
+                    Log.d(LOG_TAG, "Profile Weight: " + profileWeight);
+                    Log.d(LOG_TAG, "Profile Racket: " + profileRacket);
                 }
             }
         }

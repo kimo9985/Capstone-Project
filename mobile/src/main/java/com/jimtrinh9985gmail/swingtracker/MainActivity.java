@@ -25,6 +25,8 @@ import com.google.android.gms.wearable.Wearable;
 
 import java.util.Random;
 
+import wearprefs.WearPrefs;
+
 
 public class MainActivity extends AppCompatActivity implements
         GoogleApiClient.ConnectionCallbacks,
@@ -35,19 +37,28 @@ public class MainActivity extends AppCompatActivity implements
 
     private Button button, button1;
 
-    public static final String SP_KEY_FOREHAND = "com.swingtracker.FOREHAND";
-    public static final String SP_KEY_BACKHAND = "com.swingtracker.BACKHAND";
-    public static final String SP_KEY_OVERHEAD = "com.swingtracker.OVERHEAD";
+    //public static final String SP_KEY_FOREHAND = "com.swingtracker.FOREHAND";
+    //public static final String SP_KEY_BACKHAND = "com.swingtracker.BACKHAND";
+    //public static final String SP_KEY_OVERHEAD = "com.swingtracker.OVERHEAD";
     private static final String COUNT_KEY = "count";
+    public static final String SP_KEY_NAME = "com.swingtracker.NAME";
+    public static final String SP_KEY_HEIGHT = "com.swingtracker.HEIGHT";
+    public static final String SP_KEY_WEIGHT = "com.swingtracker.WEIGHT";
+    public static final String SP_KEY_RACKET = "com.swingtracker.RACKET";
     private int count = 0;
 
     private static int forehand, backhand, overhead;
+
     GoogleApiClient mGoogleApiClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        WearPrefs.init(this, "com.swingtracker.FOREHAND");
+        WearPrefs.init(this, "com.swingtracker.BACKHAND");
+        WearPrefs.init(this, "com.swingtracker.OVERHEAD");
 
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(this)
@@ -67,7 +78,7 @@ public class MainActivity extends AppCompatActivity implements
         button1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getSwingData();
+                updateProfile();
             }
         });
     }
@@ -102,10 +113,10 @@ public class MainActivity extends AppCompatActivity implements
 
     }
 
-    public void getSwingData() {
+    public void updateProfile() {
 
         count = count + 1;
-        Log.d(LOG_TAG, "getSwingData: " + count);
+        Log.d(LOG_TAG, "updateProfile: " + count);
 
         if (mGoogleApiClient.isConnected()) {
 
@@ -113,16 +124,15 @@ public class MainActivity extends AppCompatActivity implements
 
             PutDataMapRequest putDataMapRequest = PutDataMapRequest.create("/swing-data");
 
-            //forehand = Utilities.getPrefForehand(getActivity());
-            //backhand = Utilities.getPrefBackhand(getActivity());
-            //overhead = Utilities.getPrefOverhead(getActivity());
-
             putDataMapRequest.getDataMap().putInt(COUNT_KEY, count);
-            //putDataMapRequest.getDataMap().getInt(SP_KEY_FOREHAND, forehand);
-            //putDataMapRequest.getDataMap().getInt(String.valueOf(forehand));
-            //putDataMapRequest.getDataMap().getString(SP_KEY_BACKHAND);
-            //putDataMapRequest.getDataMap().getInt(SP_KEY_OVERHEAD, overhead);
-            //forehand = putDataMapRequest.getDataMap().getInt(String.valueOf(forehand));
+            putDataMapRequest.getDataMap().putString(SP_KEY_NAME,
+                    UtilityProfile.getPrefProfileName(this));
+            putDataMapRequest.getDataMap().putString(SP_KEY_HEIGHT,
+                    UtilityProfile.getPrefProfileHeight(this));
+            putDataMapRequest.getDataMap().putString(SP_KEY_WEIGHT,
+                    UtilityProfile.getPrefProfileWeight(this));
+            putDataMapRequest.getDataMap().putString(SP_KEY_RACKET,
+                    UtilityProfile.getPrefProfileRacket(this));
 
             PutDataRequest putDataRequest = putDataMapRequest.asPutDataRequest();
 
@@ -131,9 +141,9 @@ public class MainActivity extends AppCompatActivity implements
                         @Override
                         public void onResult(@NonNull DataApi.DataItemResult dataItemResult) {
                             if (dataItemResult.getStatus().isSuccess()) {
-                                Log.d(LOG_TAG, "Swing Data sent successfully!");
+                                Log.d(LOG_TAG, "Profile Data sent successfully!");
                             } else {
-                                Log.d(LOG_TAG, "Swing Data failed to send!" +
+                                Log.d(LOG_TAG, "Profile Data failed to send!" +
                                         dataItemResult.getStatus().getStatusCode());
                             }
                         }
