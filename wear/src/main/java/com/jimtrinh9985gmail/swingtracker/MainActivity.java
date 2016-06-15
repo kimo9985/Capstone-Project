@@ -7,17 +7,38 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.widget.ImageView;
+
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.wearable.DataApi;
+import com.google.android.gms.wearable.DataEvent;
+import com.google.android.gms.wearable.DataEventBuffer;
+import com.google.android.gms.wearable.DataMapItem;
+import com.google.android.gms.wearable.PutDataMapRequest;
+import com.google.android.gms.wearable.PutDataRequest;
+import com.google.android.gms.wearable.Wearable;
 
 import java.util.Timer;
 import java.util.TimerTask;
 
 
-public class MainActivity extends Activity implements SensorEventListener {
+public class MainActivity extends Activity implements SensorEventListener,
+        GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener,
+        DataApi.DataListener {
 
     public final String LOG_TAG = MainActivity.class.getSimpleName();
+
+    private static int forehand, backhand, overhead;
+    private GoogleApiClient mGoogleApiClient;
+    private int mCount = 0;
+    private String profileName, profileHeight, profileWeight, profileRacket;
 
     // Delay between sensor readings //
     private static final long TIME_THRESHOLD_NS = 400000000;  // in nanoseconds (.4 seconds)
@@ -83,6 +104,12 @@ public class MainActivity extends Activity implements SensorEventListener {
         setContentView(R.layout.activity_main);
         setupViews();
 
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addApi(Wearable.API)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .build();
+
         gripSetting = Utilities.getPrefGrip(this);
         foreHandCount = Utilities.getPrefForehand(this);
         backHandCount = Utilities.getPrefBackhand(this);
@@ -105,6 +132,8 @@ public class MainActivity extends Activity implements SensorEventListener {
         } else {
             Log.d(LOG_TAG, "Failed to initiate Accelerometer");
         }
+
+
     }
 
     public void setupViews() {
@@ -294,6 +323,7 @@ public class MainActivity extends Activity implements SensorEventListener {
     @Override
     protected void onResume() {
         super.onResume();
+        mGoogleApiClient.connect();
         if (sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_NORMAL)) {
             if (Log.isLoggable(LOG_TAG, Log.DEBUG)) {
                 Log.d(LOG_TAG, "Successfully registered for the sensor updates");
@@ -304,6 +334,8 @@ public class MainActivity extends Activity implements SensorEventListener {
     @Override
     protected void onPause() {
         super.onPause();
+        Wearable.DataApi.removeListener(mGoogleApiClient, this);
+        mGoogleApiClient.disconnect();
         sensorManager.unregisterListener(this);
         if (Log.isLoggable(LOG_TAG, Log.DEBUG)) {
             Log.d(LOG_TAG, "Unregistered for sensor events");
@@ -314,6 +346,51 @@ public class MainActivity extends Activity implements SensorEventListener {
     protected void onDestroy() {
         super.onDestroy();
         sensorManager.unregisterListener(this);
+    }
+
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+        Log.d(LOG_TAG, "onConnected:  Successfully connected to Google API Client");
+        Wearable.DataApi.addListener(mGoogleApiClient, this);
+        Log.d(LOG_TAG, "mCount: " + mCount);
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+        Log.d(LOG_TAG, "onConnectionSuspended:  Connected to Google API Client suspended");
+    }
+
+    @Override
+    public void onDataChanged(DataEventBuffer dataEventBuffer) {
+
+        Log.d(LOG_TAG, "Wearable onDataChanged: " + dataEventBuffer);
+
+        for (DataEvent dataEvent : dataEventBuffer) {
+            if (dataEvent.getType() == DataEvent.TYPE_CHANGED) {
+                String path = dataEvent.getDataItem().getUri().getPath();
+                if (path.equals("/swing-data")) {
+                    DataMapItem dataMapItem = DataMapItem.fromDataItem(dataEvent.getDataItem());
+                    mCount = dataMapItem.getDataMap()
+                            .getInt(MyWearableListenerService.COUNT_KEY);
+                    profileName = dataMapItem.getDataMap()
+                            .getString(MyWearableListenerService.PROFILE_NAME_KEY);
+                    profileHeight = dataMapItem.getDataMap()
+                            .getString(MyWearableListenerService.PROFILE_HEIGHT_KEY);
+                    profileWeight = dataMapItem.getDataMap()
+                            .getString(MyWearableListenerService.PROFILE_WEIGHT_KEY);
+                    profileRacket = dataMapItem.getDataMap()
+                            .getString(MyWearableListenerService.PROFILE_RACKET_KEY);
+
+                    Log.d(LOG_TAG, "mCount: " + mCount);
+                    Log.d(LOG_TAG, "Profile Name: " + profileName);
+                }
+            }
+        }
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+        Log.d(LOG_TAG, "onConnectionFailed:  Failed to connect, with result: " + connectionResult);
     }
 
     // Set page indicator for ViewPager //

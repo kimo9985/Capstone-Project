@@ -59,7 +59,6 @@ public class CountFragment extends Fragment {
     }
 
     public void setForehandCounter(int i) {
-        Log.d(LOG_TAG, "SetForehandCounter: " + i);
         setForehandCounter(i < 0 ? "0" : String.valueOf(i));
     }
 

@@ -3,8 +3,7 @@
     <string name="forehand">Forehand: </string>
     <string name="backhand">Backhand: </string>
     <string name="overhead">Overhead: </string>
-    <string name="reset">Reset Data</string>
-    <string name="send_data">Send Data</string>
+    <string name="reset">Reset</string>
     <string name="grip">Lefty / Righty</string>
     <string name="zero">0</string>
     <string name="player_image">Tennis Player</string>

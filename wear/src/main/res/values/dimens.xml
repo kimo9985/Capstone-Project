@@ -2,5 +2,5 @@
 <resources>
     <dimen name="pager_image_margin">5dp</dimen>
     <dimen name="pager_margin_bottom">10dp</dimen>
-    <dimen name="button_margin_top">35dp</dimen>
+    <dimen name="button_margin_top">25dp</dimen>
 </resources>
