@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">Swing Tracker</string>
-    <string name="forehand">Forehand: </string>
-    <string name="backhand">Backhand: </string>
-    <string name="overhead">Overhead: </string>
+    <string name="forehand">Forehand:</string>
+    <string name="backhand">Backhand:</string>
+    <string name="overhead">Overhead:</string>
     <string name="reset">Reset</string>
     <string name="grip">Lefty / Righty</string>
     <string name="zero">0</string>

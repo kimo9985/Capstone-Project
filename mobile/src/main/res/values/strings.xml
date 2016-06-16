@@ -5,6 +5,11 @@
     <string name="chart_height">450dp</string>
     <string name="save_button">Save</string>
 
+    <string name="forehand">Forehand:</string>
+    <string name="backhand">Backhand:</string>
+    <string name="overhead">Overhead:</string>
+    <string name="zero">0</string>
+
     <string name="profile_image">Profile Image</string>
     <string name="profile_cd_image">Profile Image</string>
     <string name="player_cd_name">Player Name</string>

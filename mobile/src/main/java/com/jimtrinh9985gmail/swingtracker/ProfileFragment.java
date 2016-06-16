@@ -4,6 +4,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -142,5 +145,26 @@ public class ProfileFragment extends AppCompatActivity implements View.OnLongCli
         pWeight = UtilityProfile.getPrefProfileWeight(this);
         pGrip = UtilityProfile.getPrefProfileGrip1(this);
         pRacket = UtilityProfile.getPrefProfileRacket(this);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_profile:
+                return true;
+            case R.id.menu_chart:
+                Intent intent = new Intent(this, MainActivity.class);
+                startActivity(intent);
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
