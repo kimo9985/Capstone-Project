@@ -29,7 +29,7 @@ public class ChartFragment extends Fragment {
     public static final String SP_KEY_BACKHAND = "com.swingtracker.BACKHAND";
     public static final String SP_KEY_OVERHEAD = "com.swingtracker.OVERHEAD";
 
-    private static int forehand, backhand, overhead;
+    public static int cForehand, cBackhand, cOverhead;
     private BarChart chart;
 
     @Override
@@ -39,15 +39,15 @@ public class ChartFragment extends Fragment {
 
         SharedPreferences forehands = this.getActivity().getSharedPreferences
                 ("com.swingtracker.FOREHAND", Context.MODE_PRIVATE);
-        forehand = forehands.getInt("com.swingtracker.FOREHAND", 0);
+        cForehand = forehands.getInt("com.swingtracker.FOREHAND", 0);
 
         SharedPreferences backhands = this.getActivity().getSharedPreferences
                 ("com.swingtracker.BACKHAND", Context.MODE_PRIVATE);
-        backhand = backhands.getInt("com.swingtracker.BACKHAND", 0);
+        cBackhand = backhands.getInt("com.swingtracker.BACKHAND", 0);
 
         SharedPreferences overheads = this.getActivity().getSharedPreferences
                 ("com.swingtracker.OVERHEAD", Context.MODE_PRIVATE);
-        overhead = overheads.getInt("com.swingtracker.OVERHEAD", 0);
+        cOverhead = overheads.getInt("com.swingtracker.OVERHEAD", 0);
 
         chart = (BarChart) view.findViewById(R.id.chart);
 
@@ -81,9 +81,9 @@ public class ChartFragment extends Fragment {
         chart.getAxisRight().setEnabled(false);
 
         ArrayList<BarEntry> yValues = new ArrayList<>();
-        yValues.add(new BarEntry(forehand, 0));
-        yValues.add(new BarEntry(backhand, 1));
-        yValues.add(new BarEntry(overhead, 2));
+        yValues.add(new BarEntry(cForehand, 0));
+        yValues.add(new BarEntry(cBackhand, 1));
+        yValues.add(new BarEntry(cOverhead, 2));
 
         BarDataSet barDataSet = new BarDataSet(yValues, "# of Swings");
         barDataSet.setValueTextSize(12);

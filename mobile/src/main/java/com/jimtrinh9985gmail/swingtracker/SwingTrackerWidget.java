@@ -24,11 +24,9 @@ public class SwingTrackerWidget extends AppWidgetProvider {
 
             int widgetId = appWidgetIds[i];
 
-            String forehand = ChartFragment.SP_KEY_FOREHAND;
-            String backhand = ChartFragment.SP_KEY_BACKHAND;
-            String overhead = ChartFragment.SP_KEY_OVERHEAD;
-
-            Log.d(LOG_TAG, "Widget forehand: " + forehand);
+            String forehand = String.valueOf(ChartFragment.cForehand);
+            String backhand = String.valueOf(ChartFragment.cBackhand);
+            String overhead = String.valueOf(ChartFragment.cOverhead);
 
             RemoteViews remoteViews = new RemoteViews(context.getPackageName(),
                     R.layout.widget_layout);
@@ -40,8 +38,7 @@ public class SwingTrackerWidget extends AppWidgetProvider {
             Intent intent = new Intent(context, SwingTrackerWidget.class);
             intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
             intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, appWidgetIds);
-            PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent,
-                    PendingIntent.FLAG_UPDATE_CURRENT);
+
             appWidgetManager.updateAppWidget(widgetId, remoteViews);
 
         }

@@ -23,7 +23,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/forehand"
                 android:id="@+id/forehand_text"
-                style="@style/Text" />
+                style="@style/WidgetText" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -32,7 +32,7 @@
                 android:layout_marginStart="4dp"
                 android:text="@string/zero"
                 android:id="@+id/forehand_count"
-                style="@style/Text" />
+                style="@style/WidgetText" />
 
         </LinearLayout>
 
@@ -49,7 +49,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/backhand"
                 android:id="@+id/backhand_text"
-                style="@style/Text" />
+                style="@style/WidgetText" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -58,7 +58,7 @@
                 android:layout_marginStart="4dp"
                 android:text="@string/zero"
                 android:id="@+id/backhand_count"
-                style="@style/Text" />
+                style="@style/WidgetText" />
 
         </LinearLayout>
 
@@ -75,7 +75,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/overhead"
                 android:id="@+id/overhead_text"
-                style="@style/Text" />
+                style="@style/WidgetText" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -84,7 +84,7 @@
                 android:layout_marginStart="4dp"
                 android:text="@string/zero"
                 android:id="@+id/overhead_count"
-                style="@style/Text" />
+                style="@style/WidgetText" />
 
         </LinearLayout>
     </LinearLayout>
