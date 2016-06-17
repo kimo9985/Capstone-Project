@@ -8,6 +8,7 @@
     <string name="forehand">Forehand:</string>
     <string name="backhand">Backhand:</string>
     <string name="overhead">Overhead:</string>
+    <string name="date_text">My Last Workout - </string>
     <string name="zero">0</string>
 
     <string name="profile_image">Profile Image</string>

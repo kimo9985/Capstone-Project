@@ -33,9 +33,6 @@ public class MainActivity extends AppCompatActivity implements
 
     private Button button, button1;
 
-    //public static final String SP_KEY_FOREHAND = "com.swingtracker.FOREHAND";
-    //public static final String SP_KEY_BACKHAND = "com.swingtracker.BACKHAND";
-    //public static final String SP_KEY_OVERHEAD = "com.swingtracker.OVERHEAD";
     private static final String COUNT_KEY = "count";
     public static final String SP_KEY_NAME = "com.swingtracker.NAME";
     public static final String SP_KEY_HEIGHT = "com.swingtracker.HEIGHT";
@@ -46,6 +43,7 @@ public class MainActivity extends AppCompatActivity implements
     private static int forehand, backhand, overhead;
 
     GoogleApiClient mGoogleApiClient;
+    public SwingTrackerWidget swingTrackerWidget;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
