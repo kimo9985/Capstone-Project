@@ -38,8 +38,6 @@ public class MainActivity extends AppCompatActivity implements
     public static final String SP_KEY_WEIGHT = "com.swingtracker.WEIGHT";
     public static final String SP_KEY_RACKET = "com.swingtracker.RACKET";
 
-    //private static int forehand, backhand, overhead;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

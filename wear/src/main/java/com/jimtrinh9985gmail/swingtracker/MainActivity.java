@@ -362,6 +362,8 @@ public class MainActivity extends Activity implements SensorEventListener,
     @Override
     public void onDataChanged(DataEventBuffer dataEventBuffer) {
 
+        // Update Wearable profile //
+
         Log.d(LOG_TAG, "Wearable onDataChanged: " + dataEventBuffer);
 
         for (DataEvent dataEvent : dataEventBuffer) {
