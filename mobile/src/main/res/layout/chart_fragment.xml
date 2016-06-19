@@ -26,18 +26,7 @@
             android:layout_height="wrap_content"
             android:text="@string/chart_workout"
             android:id="@+id/chart_button"
-            android:contentDescription="@string/update_button"
-            android:onClick="true"
-            android:background="@drawable/button"
-            android:textColor="@color/A100_indigo"
-            android:layout_gravity="center" />
-
-        <Button
-            android:layout_width="@dimen/button_width"
-            android:layout_height="wrap_content"
-            android:text="Get Data"
-            android:id="@+id/get_data_button"
-            android:contentDescription="@string/update_button"
+            android:contentDescription="@string/cd_update_button"
             android:onClick="true"
             android:background="@drawable/button"
             android:textColor="@color/A100_indigo"

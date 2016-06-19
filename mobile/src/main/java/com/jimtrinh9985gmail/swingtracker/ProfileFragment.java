@@ -20,6 +20,7 @@ public class ProfileFragment extends AppCompatActivity implements View.OnLongCli
 
     public final String LOG_TAG = ProfileFragment.class.getSimpleName();
 
+    // Player Profile //
     private ImageView profileImage;
     private TextView profileName, profileHeight, profileWeight, profileGrip, profileRacket;
     private String pName, pHeight, pWeight, pGrip, pRacket;

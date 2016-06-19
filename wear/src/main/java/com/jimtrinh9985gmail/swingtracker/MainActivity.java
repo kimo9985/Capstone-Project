@@ -34,9 +34,8 @@ public class MainActivity extends Activity implements SensorEventListener,
 
     public final String LOG_TAG = MainActivity.class.getSimpleName();
 
-    private static int forehand, backhand, overhead;
+    //private static int forehand, backhand, overhead;
     private GoogleApiClient mGoogleApiClient;
-    private int mCount = 0;
     private String profileName, profileHeight, profileWeight, profileRacket;
 
     // Delay between sensor readings //
@@ -135,8 +134,6 @@ public class MainActivity extends Activity implements SensorEventListener,
         } else {
             Log.d(LOG_TAG, "Failed to initiate Accelerometer");
         }
-
-
     }
 
     public void setupViews() {
@@ -355,7 +352,6 @@ public class MainActivity extends Activity implements SensorEventListener,
     public void onConnected(@Nullable Bundle bundle) {
         Log.d(LOG_TAG, "onConnected:  Successfully connected to Google API Client");
         Wearable.DataApi.addListener(mGoogleApiClient, this);
-        Log.d(LOG_TAG, "mCount: " + mCount);
     }
 
     @Override
@@ -373,8 +369,7 @@ public class MainActivity extends Activity implements SensorEventListener,
                 String path = dataEvent.getDataItem().getUri().getPath();
                 if (path.equals("/swing-data")) {
                     DataMapItem dataMapItem = DataMapItem.fromDataItem(dataEvent.getDataItem());
-                    mCount = dataMapItem.getDataMap()
-                            .getInt(MyWearableListenerService.COUNT_KEY);
+
                     profileName = dataMapItem.getDataMap()
                             .getString(MyWearableListenerService.SP_KEY_NAME);
                     profileHeight = dataMapItem.getDataMap()
@@ -389,11 +384,10 @@ public class MainActivity extends Activity implements SensorEventListener,
                     Utilities.saveProfileWeight(this, profileWeight);
                     Utilities.saveProfileRacket(this, profileRacket);
 
-                    Log.d(LOG_TAG, "mCount: " + mCount);
-                    Log.d(LOG_TAG, "Profile Name: " + profileName);
-                    Log.d(LOG_TAG, "Profile Height: " + profileHeight);
-                    Log.d(LOG_TAG, "Profile Weight: " + profileWeight);
-                    Log.d(LOG_TAG, "Profile Racket: " + profileRacket);
+                    SettingsFragment.setProfileName(profileName);
+                    SettingsFragment.setProfileHeight(profileHeight);
+                    SettingsFragment.setProfileWeight(profileWeight);
+                    SettingsFragment.setProfileRacket(profileRacket);
                 }
             }
         }

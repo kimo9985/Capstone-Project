@@ -25,7 +25,6 @@ public class MyWearableListenerService extends WearableListenerService {
     public static final String SP_KEY_HEIGHT = "com.swingtracker.HEIGHT";
     public static final String SP_KEY_WEIGHT = "com.swingtracker.WEIGHT";
     public static final String SP_KEY_RACKET = "com.swingtracker.RACKET";
-    public static final String COUNT_KEY = "count";
 
     GoogleApiClient mGoogleApiClient;
 

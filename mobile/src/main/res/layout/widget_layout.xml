@@ -21,16 +21,8 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/date_text"
+                android:text="@string/widget_text"
                 android:id="@+id/date_text"
-                style="@style/WidgetSmallText" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="4dp"
-                android:layout_marginStart="4dp"
-                android:id="@+id/date"
                 style="@style/WidgetSmallText" />
 
         </LinearLayout>

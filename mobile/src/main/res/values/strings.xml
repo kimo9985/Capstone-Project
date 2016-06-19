@@ -1,17 +1,17 @@
 <resources>
     <string name="app_name">Swing Tracker</string>
-    <string name="update_button">Update Chart</string>
     <string name="chart_workout">Update Chart</string>
     <string name="chart_height">450dp</string>
     <string name="save_button">Save</string>
-
+    <string name="profile_image">Profile Image</string>
     <string name="forehand">Forehand:</string>
     <string name="backhand">Backhand:</string>
     <string name="overhead">Overhead:</string>
-    <string name="date_text">My Last Workout - </string>
+    <string name="widget_text">My Last Workout</string>
     <string name="zero">0</string>
 
-    <string name="profile_image">Profile Image</string>
+    <!-- Content Description -->
+    <string name="cd_update_button">Load new Data and Update Chart</string>
     <string name="profile_cd_image">Profile Image</string>
     <string name="player_cd_name">Player Name</string>
     <string name="player_cd_height">Player Height</string>

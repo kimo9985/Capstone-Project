@@ -23,7 +23,6 @@ import com.google.android.gms.wearable.Wearable;
 
 import wearprefs.WearPrefs;
 
-
 public class MainActivity extends AppCompatActivity implements
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
@@ -31,19 +30,15 @@ public class MainActivity extends AppCompatActivity implements
 
     public final String LOG_TAG = MainActivity.class.getSimpleName();
 
-    private Button button, button1;
+    private Button button;
+    GoogleApiClient mGoogleApiClient;
 
-    private static final String COUNT_KEY = "count";
     public static final String SP_KEY_NAME = "com.swingtracker.NAME";
     public static final String SP_KEY_HEIGHT = "com.swingtracker.HEIGHT";
     public static final String SP_KEY_WEIGHT = "com.swingtracker.WEIGHT";
     public static final String SP_KEY_RACKET = "com.swingtracker.RACKET";
-    private int count = 0;
 
-    private static int forehand, backhand, overhead;
-
-    GoogleApiClient mGoogleApiClient;
-    public SwingTrackerWidget swingTrackerWidget;
+    //private static int forehand, backhand, overhead;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,27 +62,20 @@ public class MainActivity extends AppCompatActivity implements
                 recreate();
             }
         });
-
-        button1 = (Button) findViewById(R.id.get_data_button);
-        button1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                updateProfile();
-            }
-        });
     }
 
     @Override
     protected void onStart() {
         super.onStart();
         mGoogleApiClient.connect();
-        Log.d(LOG_TAG, "onStart - Connect to Wearable!");
+        Log.d(LOG_TAG, "Mobile onStart - Connect to Wearable!");
     }
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
         Wearable.DataApi.addListener(mGoogleApiClient, this);
         Log.d(LOG_TAG, "onConnected to Wearable!");
+        updateProfile();
     }
 
     @Override
@@ -102,23 +90,14 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onDataChanged(DataEventBuffer dataEventBuffer) {
-
-        Log.d(LOG_TAG, "Mobile onDataChanged: " + dataEventBuffer);
-
     }
 
     public void updateProfile() {
 
-        count = count + 1;
-        Log.d(LOG_TAG, "updateProfile: " + count);
-
         if (mGoogleApiClient.isConnected()) {
-
-            Log.d(LOG_TAG, "mGoogleApiClient.isConnected!");
 
             PutDataMapRequest putDataMapRequest = PutDataMapRequest.create("/swing-data");
 
-            putDataMapRequest.getDataMap().putInt(COUNT_KEY, count);
             putDataMapRequest.getDataMap().putString(SP_KEY_NAME,
                     UtilityProfile.getPrefProfileName(this));
             putDataMapRequest.getDataMap().putString(SP_KEY_HEIGHT,
@@ -145,6 +124,16 @@ public class MainActivity extends AppCompatActivity implements
         } else {
             Log.d(LOG_TAG, "mGoogleApiClient failed to connect!");
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
     }
 
     @Override

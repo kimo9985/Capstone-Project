@@ -18,7 +18,7 @@ public class SettingsFragment extends Fragment {
 
     public final String LOG_TAG = SettingsFragment.class.getSimpleName();
 
-    TextView profileName, profileHeight, profileWeight, profileRacket;
+    static TextView profileName, profileHeight, profileWeight, profileRacket;
     Button resetButton;
     Switch grip;
     private boolean gr;
@@ -63,10 +63,25 @@ public class SettingsFragment extends Fragment {
         return view;
     }
 
+    public static void setProfileName(String text) {
+        profileName.setText(text);
+    }
+
+    public static void setProfileHeight(String text) {
+        profileHeight.setText(text);
+    }
+
+    public static void setProfileWeight(String text) {
+        profileWeight.setText(text);
+    }
+
+    public static void setProfileRacket(String text) {
+        profileRacket.setText(text);
+    }
+
     @Override
     public void onResume() {
         super.onResume();
-
     }
 
     private void showGrip() {
