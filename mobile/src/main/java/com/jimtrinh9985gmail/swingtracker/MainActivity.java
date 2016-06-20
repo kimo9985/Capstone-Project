@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
+import com.google.android.gms.analytics.Tracker;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
@@ -32,6 +33,7 @@ public class MainActivity extends AppCompatActivity implements
 
     private Button button;
     GoogleApiClient mGoogleApiClient;
+    private Tracker mtracker;
 
     public static final String SP_KEY_NAME = "com.swingtracker.NAME";
     public static final String SP_KEY_HEIGHT = "com.swingtracker.HEIGHT";
@@ -46,6 +48,10 @@ public class MainActivity extends AppCompatActivity implements
         WearPrefs.init(this, "com.swingtracker.FOREHAND");
         WearPrefs.init(this, "com.swingtracker.BACKHAND");
         WearPrefs.init(this, "com.swingtracker.OVERHEAD");
+
+        // Obtain the shared Tracker instance //
+        AnalyticsTrackers.getInstance().get(AnalyticsTrackers.Target.APP);
+        AnalyticsTrackers.initialize(this);
 
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(this)

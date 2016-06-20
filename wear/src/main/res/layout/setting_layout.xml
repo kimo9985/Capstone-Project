@@ -50,7 +50,7 @@
         <Button
             android:id="@+id/reset_button"
             android:text="@string/reset"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="3dp"
             style="@style/Button" />
 
     </LinearLayout>
@@ -66,7 +66,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/handed"
-            android:paddingTop="16dp"
+            android:paddingTop="8dp"
             android:textColor="@color/black"
             android:text="@string/grip" />
 
