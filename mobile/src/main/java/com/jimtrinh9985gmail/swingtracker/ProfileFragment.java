@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -11,6 +12,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.android.gms.analytics.GoogleAnalytics;
 import com.squareup.picasso.Picasso;
 
 /**
@@ -30,6 +32,10 @@ public class ProfileFragment extends AppCompatActivity implements View.OnLongCli
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.profile_fragment);
+
+        //boolean isOptedOut = GoogleAnalytics.getInstance(this).getAppOptOut();
+        Log.d(LOG_TAG, "ProfileFragment - onCreate Analytics check!");
+        //GoogleAnalytics.getInstance(this).setAppOptOut(true);
 
         profileImage = (ImageView) findViewById(R.id.photo);
         profileName = (TextView) findViewById(R.id.profile_name);

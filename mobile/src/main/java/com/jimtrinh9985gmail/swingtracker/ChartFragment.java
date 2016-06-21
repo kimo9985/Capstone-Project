@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,7 @@ import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
+import com.google.android.gms.analytics.GoogleAnalytics;
 
 import java.util.ArrayList;
 
@@ -36,6 +38,11 @@ public class ChartFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              final Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.chart_fragment, container, false);
+
+        // Obtain the shared Tracker instance //
+//        AnalyticsTrackers.initialize(getActivity());
+//        AnalyticsTrackers.getInstance().get(AnalyticsTrackers.Target.APP);
+//        Log.d(LOG_TAG, "ChartFragment - onCreateView Analytics check!");
 
         SharedPreferences forehands = this.getActivity().getSharedPreferences
                 ("com.swingtracker.FOREHAND", Context.MODE_PRIVATE);
@@ -96,5 +103,19 @@ public class ChartFragment extends Fragment {
         chart.invalidate();
 
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(LOG_TAG, "ChartFragment - onResume Called!");
+        //GoogleAnalytics.getInstance(getActivity()).setAppOptOut(true);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.d(LOG_TAG, "ChartFragment - onPause Called!");
+        //GoogleAnalytics.getInstance(getActivity()).setAppOptOut(true);
     }
 }
