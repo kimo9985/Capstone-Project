@@ -2,7 +2,7 @@
     <string name="app_name">Swing Tracker</string>
     <string name="chart_workout">Update Chart</string>
     <string name="chart_height">450dp</string>
-    <string name="save_button">Save</string>
+    <string name="save_button">Save Data</string>
     <string name="profile_image">Profile Image</string>
     <string name="forehand">Forehand:</string>
     <string name="backhand">Backhand:</string>
@@ -10,8 +10,14 @@
     <string name="widget_text">My Last Workout</string>
     <string name="zero">0</string>
 
+    <!-- Menu -->
+    <string name="menu_chart">Chart View</string>
+    <string name="menu_profile">Player Profile</string>
+    <string name="menu_data">Saved Data</string>
+
     <!-- Content Description -->
     <string name="cd_update_button">Load new Data and Update Chart</string>
+    <string name="cd_save_button">Save Workout Data</string>
     <string name="profile_cd_image">Profile Image</string>
     <string name="player_cd_name">Player Name</string>
     <string name="player_cd_height">Player Height</string>

@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.jimtrinh9985gmail.swingtracker.myDatabase.MyData;
 import com.squareup.picasso.Picasso;
 
 /**
@@ -164,6 +165,10 @@ public class ProfileFragment extends AppCompatActivity implements View.OnLongCli
             case R.id.menu_chart:
                 Intent intent = new Intent(this, MainActivity.class);
                 startActivity(intent);
+                return true;
+            case R.id.menu_data:
+                Intent intent1 = new Intent(this, MyData.class);
+                startActivity(intent1);
                 return true;
         }
         return super.onOptionsItemSelected(item);

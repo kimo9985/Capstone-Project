@@ -23,11 +23,18 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".ProfileFragment"
             android:screenOrientation="portrait" >
         </activity>
-        <activity android:name=".ProfileUpdate" >
+
+        <activity
+            android:name=".ProfileUpdate" >
+        </activity>
+
+        <activity
+            android:name=".myDatabase.MyData" >
         </activity>
 
         <meta-data

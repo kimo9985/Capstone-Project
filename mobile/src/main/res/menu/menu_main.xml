@@ -10,11 +10,16 @@
             android:id="@+id/menu_chart"
             android:orderInCategory="1"
             app:showAsAction="collapseActionView"
-            android:title="Chart View" />
+            android:title="@string/menu_chart" />
         <item
             android:id="@+id/menu_profile"
             android:orderInCategory="2"
             app:showAsAction="collapseActionView"
-            android:title="Player Profile" />
+            android:title="@string/menu_profile" />
+        <item
+            android:id="@+id/menu_data"
+            android:orderInCategory="3"
+            app:showAsAction="collapseActionView"
+            android:title="@string/menu_data" />
     </group>
 </menu>

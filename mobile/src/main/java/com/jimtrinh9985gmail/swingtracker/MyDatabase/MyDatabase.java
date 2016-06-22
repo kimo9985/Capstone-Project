@@ -1,4 +1,4 @@
-package com.jimtrinh9985gmail.swingtracker.MyDatabase;
+package com.jimtrinh9985gmail.swingtracker.myDatabase;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -21,7 +21,7 @@ public class MyDatabase extends SQLiteOpenHelper {
     private Context mContext;
 
     // Database Info //
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
     private static final String DATABASE_NAME = "myWorkoutDatabase";
     public static final String DATABASE_TABLE = "swingData";
 
@@ -101,6 +101,4 @@ public class MyDatabase extends SQLiteOpenHelper {
         }
         return workoutDataModels;
     }
-
-
 }

@@ -1,4 +1,4 @@
-package com.jimtrinh9985gmail.swingtracker.MyDatabase;
+package com.jimtrinh9985gmail.swingtracker.myDatabase;
 
 /**
  * Created by Kimo on 6/21/2016.
@@ -9,10 +9,13 @@ public class WorkoutDataModel {
     private String myDate;
 
     public WorkoutDataModel() {
-        this.myForehand = 0;
-        this.myBackhand = 0;
-        this.myOverhead = 0;
-        this.myDate = null;
+    }
+
+    public WorkoutDataModel(int myForehand, int myBackhand, int myOverhead, String myDate) {
+        this.myForehand = myForehand;
+        this.myBackhand = myBackhand;
+        this.myOverhead = myOverhead;
+        this.myDate = myDate;
     }
 
     public int get_id() {
