@@ -48,10 +48,6 @@ public class MainActivity extends AppCompatActivity implements
         WearPrefs.init(this, "com.swingtracker.BACKHAND");
         WearPrefs.init(this, "com.swingtracker.OVERHEAD");
 
-//        // Obtain the shared Tracker instance //
-//        AnalyticsTrackers.initialize(this);
-//        AnalyticsTrackers.getInstance().get(AnalyticsTrackers.Target.APP);
-
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
