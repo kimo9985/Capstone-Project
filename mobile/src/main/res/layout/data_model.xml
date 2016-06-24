@@ -20,7 +20,7 @@
             android:text="@string/forehand" />
 
         <TextView
-            android:id="@+id/forehand_count"
+            android:id="@+id/dm_forehand_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             style="@style/Counter"
@@ -45,7 +45,7 @@
             android:text="@string/backhand" />
 
         <TextView
-            android:id="@+id/backhand_count"
+            android:id="@+id/dm_backhand_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             style="@style/Counter"
@@ -70,7 +70,7 @@
             android:text="@string/overhead" />
 
         <TextView
-            android:id="@+id/overhead_count"
+            android:id="@+id/dm_overhead_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             style="@style/Counter"
@@ -81,7 +81,7 @@
     </LinearLayout>
 
     <TextView
-        android:id="@+id/save_date"
+        android:id="@+id/dm_save_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         style="@style/Counter"

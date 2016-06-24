@@ -3,17 +3,17 @@ package com.jimtrinh9985gmail.swingtracker.myDatabase;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.ListView;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
 import com.jimtrinh9985gmail.swingtracker.ProfileFragment;
 import com.jimtrinh9985gmail.swingtracker.R;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -23,27 +23,54 @@ public class MyData extends AppCompatActivity {
 
     public final String LOG_TAG = MyData.class.getSimpleName();
 
-    private RecyclerView recyclerView;
-    private List<WorkoutDataModel> workoutDataModels = new ArrayList<>();
+    private ListView listView;
+    List<WorkoutDataModel> workoutDataModels;
     MyDatabaseAdapter myDatabaseAdapter;
+    MyDatabase database;
+    private AdView mAdView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.data_fragment);
 
-        recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+        MobileAds.initialize(getApplicationContext(), "ca-app-pub-3940256099942544~3347511713");
+        AdView mAdView = (AdView) findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder()
+                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+                .build();
+        mAdView.loadAd(adRequest);
 
-        myDatabaseAdapter = new MyDatabaseAdapter(workoutDataModels);
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.setAdapter(myDatabaseAdapter);
+        database = new MyDatabase(this);
+        workoutDataModels = database.getAllItems();
+        myDatabaseAdapter = new MyDatabaseAdapter(this, R.layout.data_model, workoutDataModels);
+        listView = (ListView) findViewById(R.id.listView);
+        listView.setAdapter(myDatabaseAdapter);
+
     }
 
-    public static List<WorkoutDataModel> getData() {
-        List<WorkoutDataModel> workoutDataModels = new ArrayList<>();
-        return workoutDataModels;
+    @Override
+    protected void onPause() {
+        if (mAdView != null) {
+            mAdView.pause();
+        }
+        super.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (mAdView != null) {
+            mAdView.resume();
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (mAdView != null) {
+            mAdView.destroy();
+        }
+        super.onDestroy();
     }
 
     @Override

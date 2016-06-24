@@ -1,59 +1,54 @@
 package com.jimtrinh9985gmail.swingtracker.myDatabase;
 
-import android.support.v7.widget.RecyclerView;
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.jimtrinh9985gmail.swingtracker.R;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by Kimo on 6/21/2016.
  */
-public class MyDatabaseAdapter extends RecyclerView.Adapter<MyDatabaseAdapter.MyViewHolder> {
+public class MyDatabaseAdapter extends ArrayAdapter<WorkoutDataModel> {
 
     public final String LOG_TAG = MyDatabaseAdapter.class.getSimpleName();
+    private TextView forehand, backhand, overhead, date;
+    Context context;
+    int layoutResourceId;
+    List<WorkoutDataModel> workoutDataModel = new ArrayList<WorkoutDataModel>();
 
-    private List<WorkoutDataModel> workoutDataModels;
-
-    public MyDatabaseAdapter(List<WorkoutDataModel> workoutDataModels) {
-        this.workoutDataModels = workoutDataModels;
+    public MyDatabaseAdapter(Context context, int layoutResourceId, List<WorkoutDataModel> object) {
+        super(context, layoutResourceId, object);
+        this.layoutResourceId = layoutResourceId;
+        this.workoutDataModel = object;
+        this.context = context;
     }
 
     @Override
-    public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.data_model, parent, false);
-        return new MyViewHolder(view);
-    }
+    public View getView(int position, View convertView, ViewGroup parent) {
 
-    @Override
-    public void onBindViewHolder(MyViewHolder holder, int position) {
-        WorkoutDataModel current = workoutDataModels.get(position);
-        holder.forehand.setText(current.getMyForehand());
-        holder.backhand.setText(current.getMyBackhand());
-        holder.overhead.setText(current.getMyOverhead());
-        holder.date.setText(current.getMyDate());
-    }
+        if (convertView == null) {
+            LayoutInflater layoutInflater = (LayoutInflater)
+                    context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            convertView = layoutInflater.inflate(R.layout.data_model, parent, false);
 
-    @Override
-    public int getItemCount() {
-        return workoutDataModels.size();
-    }
-
-    class MyViewHolder extends RecyclerView.ViewHolder {
-
-        TextView forehand, backhand, overhead, date;
-
-        public MyViewHolder(View itemView) {
-            super(itemView);
-            forehand = (TextView) itemView.findViewById(R.id.forehand_count);
-            backhand = (TextView) itemView.findViewById(R.id.backhand_count);
-            overhead = (TextView) itemView.findViewById(R.id.overhead_count);
-            date = (TextView) itemView.findViewById(R.id.save_date);
+            forehand = (TextView) convertView.findViewById(R.id.dm_forehand_count);
+            backhand = (TextView) convertView.findViewById(R.id.dm_backhand_count);
+            overhead = (TextView) convertView.findViewById(R.id.dm_overhead_count);
+            date = (TextView) convertView.findViewById(R.id.dm_save_date);
         }
+        WorkoutDataModel current = workoutDataModel.get(position);
+        forehand.setText(String.valueOf(current.getMyForehand()));
+        backhand.setText(String.valueOf(current.getMyBackhand()));
+        overhead.setText(String.valueOf(current.getMyOverhead()));
+        date.setText(String.valueOf(current.getMyDate()));
+
+        return convertView;
     }
  }

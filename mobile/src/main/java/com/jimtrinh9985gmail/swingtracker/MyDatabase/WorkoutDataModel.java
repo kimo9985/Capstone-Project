@@ -9,13 +9,10 @@ public class WorkoutDataModel {
     private String myDate;
 
     public WorkoutDataModel() {
-    }
-
-    public WorkoutDataModel(int myForehand, int myBackhand, int myOverhead, String myDate) {
-        this.myForehand = myForehand;
-        this.myBackhand = myBackhand;
-        this.myOverhead = myOverhead;
-        this.myDate = myDate;
+        this.myForehand = 0;
+        this.myBackhand = 0;
+        this.myOverhead = 0;
+        this.myDate = null;
     }
 
     public int get_id() {
