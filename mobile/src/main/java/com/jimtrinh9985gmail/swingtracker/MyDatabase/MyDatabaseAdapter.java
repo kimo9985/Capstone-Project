@@ -5,7 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.TextView;
+import android.widget.CheckBox;
 
 import com.jimtrinh9985gmail.swingtracker.R;
 
@@ -18,7 +18,6 @@ import java.util.List;
 public class MyDatabaseAdapter extends ArrayAdapter<WorkoutDataModel> {
 
     public final String LOG_TAG = MyDatabaseAdapter.class.getSimpleName();
-    private TextView forehand, backhand, overhead, date;
     Context context;
     int layoutResourceId;
     List<WorkoutDataModel> workoutDataModel = new ArrayList<WorkoutDataModel>();
@@ -31,24 +30,16 @@ public class MyDatabaseAdapter extends ArrayAdapter<WorkoutDataModel> {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
 
-        if (convertView == null) {
-            LayoutInflater layoutInflater = (LayoutInflater)
-                    context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = layoutInflater.inflate(R.layout.data_model, parent, false);
+        LayoutInflater layoutInflater = (LayoutInflater)
+                context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        convertView = layoutInflater.inflate(R.layout.data_model, parent, false);
 
-            forehand = (TextView) convertView.findViewById(R.id.dm_forehand_count);
-            backhand = (TextView) convertView.findViewById(R.id.dm_backhand_count);
-            overhead = (TextView) convertView.findViewById(R.id.dm_overhead_count);
-            date = (TextView) convertView.findViewById(R.id.dm_save_date);
-        }
+        CheckBox checkBox = (CheckBox) convertView.findViewById(R.id.deleteBox);
         WorkoutDataModel current = workoutDataModel.get(position);
-        forehand.setText(String.valueOf(current.getMyForehand()));
-        backhand.setText(String.valueOf(current.getMyBackhand()));
-        overhead.setText(String.valueOf(current.getMyOverhead()));
-        date.setText(String.valueOf(current.getMyDate()));
+        checkBox.setChecked(current.getMyStatus() == 1);
 
         return convertView;
     }
- }
+}

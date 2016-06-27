@@ -9,12 +9,16 @@
     <string name="overhead">Overhead:</string>
     <string name="widget_text">My Last Workout</string>
     <string name="zero">0</string>
+    <string name="list_title">Saved Workout Data</string>
     <string name="banner_ad_unit_id" translatable="false">ca-app-pub-3940256099942544/6300978111</string>
 
     <!-- Menu -->
     <string name="menu_chart">Chart View</string>
     <string name="menu_profile">Player Profile</string>
     <string name="menu_data">Saved Data</string>
+
+    <string name="menu_delete">Delete Item</string>
+    <string name="menu_delete_all">Delete All</string>
 
     <!-- Content Description -->
     <string name="cd_update_button">Load new Data and Update Chart</string>
@@ -25,4 +29,5 @@
     <string name="player_cd_weight">Player Weight</string>
     <string name="player_cd_grip">Player Grip</string>
     <string name="player_cd_racket">Player Racket</string>
+    <string name="cd_image_button">Delete Checked</string>
 </resources>

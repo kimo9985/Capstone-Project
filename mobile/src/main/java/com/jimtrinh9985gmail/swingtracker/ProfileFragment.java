@@ -160,11 +160,11 @@ public class ProfileFragment extends AppCompatActivity implements View.OnLongCli
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.menu_profile:
-                return true;
             case R.id.menu_chart:
                 Intent intent = new Intent(this, MainActivity.class);
                 startActivity(intent);
+                return true;
+            case R.id.menu_profile:
                 return true;
             case R.id.menu_data:
                 Intent intent1 = new Intent(this, MyData.class);

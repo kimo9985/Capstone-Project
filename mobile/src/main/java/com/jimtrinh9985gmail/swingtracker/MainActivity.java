@@ -25,7 +25,6 @@ import com.google.android.gms.wearable.PutDataRequest;
 import com.google.android.gms.wearable.Wearable;
 import com.jimtrinh9985gmail.swingtracker.myDatabase.MyData;
 import com.jimtrinh9985gmail.swingtracker.myDatabase.MyDatabase;
-import com.jimtrinh9985gmail.swingtracker.myDatabase.MyDatabaseAdapter;
 
 import java.util.Calendar;
 
@@ -82,6 +81,8 @@ public class MainActivity extends AppCompatActivity implements
     // Insert Workout Data to SQLiteDB //
     public void insertWorkoutData(View view) {
 
+        int status = 0;
+
         SharedPreferences forehands = this.getSharedPreferences
                 ("com.swingtracker.FOREHAND", Context.MODE_PRIVATE);
         forehand = (forehands.getInt("com.swingtracker.FOREHAND", 0));
@@ -102,8 +103,7 @@ public class MainActivity extends AppCompatActivity implements
 
         MyDatabase database = new MyDatabase(this);
 
-        long id = database.insertData(forehand, backhand, overhead, date);
-        //myDatabaseAdapter.notifyDataSetChanged();
+        long id = database.insertData(status, forehand, backhand, overhead, date);
         Toast.makeText(this, "Workout Data Saved!", Toast.LENGTH_LONG).show();
     }
 
