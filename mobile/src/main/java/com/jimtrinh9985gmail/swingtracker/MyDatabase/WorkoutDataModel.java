@@ -33,7 +33,6 @@ public class WorkoutDataModel {
 
     public void setMyStatus(int myStatus) {
         this.myStatus = myStatus;
-        Log.d(LOG_TAG, "Datamodel setMyStatus: " + myStatus);
     }
 
     public int getMyForehand() {
