@@ -18,7 +18,6 @@ import android.widget.TextView;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
-import com.jimtrinh9985gmail.swingtracker.ChartFragment;
 import com.jimtrinh9985gmail.swingtracker.MainActivity;
 import com.jimtrinh9985gmail.swingtracker.ProfileFragment;
 import com.jimtrinh9985gmail.swingtracker.R;

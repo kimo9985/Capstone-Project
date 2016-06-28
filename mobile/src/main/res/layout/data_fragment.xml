@@ -23,12 +23,7 @@
         android:onClick="deleteItems"
         android:contentDescription="@string/cd_image_button"
         android:gravity="center_vertical|center_horizontal"
-        android:background="@android:color/transparent"
-        android:focusable="false"
-        android:adjustViewBounds="true"
-        android:maxHeight="30dp"
-        android:maxWidth="30dp"
-        android:scaleType="fitCenter"
+        style="@style/ImageButton"
         android:src="@mipmap/ic_delete_button"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true" />

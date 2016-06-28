@@ -10,7 +10,6 @@ import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.TextView;
 
-
 /**
  * Created by Kimo on 5/15/2016.
  */

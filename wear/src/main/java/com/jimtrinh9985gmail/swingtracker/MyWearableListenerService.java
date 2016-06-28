@@ -4,11 +4,8 @@ import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.wearable.Channel;
 import com.google.android.gms.wearable.DataEvent;
 import com.google.android.gms.wearable.DataEventBuffer;
-import com.google.android.gms.wearable.MessageEvent;
-import com.google.android.gms.wearable.Node;
 import com.google.android.gms.wearable.Wearable;
 import com.google.android.gms.wearable.WearableListenerService;
 
@@ -59,7 +56,6 @@ public class MyWearableListenerService extends WearableListenerService {
                 Log.d(LOG_TAG, "MyWearableService path:" + path);
 
                 if (path.equals("/swing-data")) {
-
                 }
             }
         }
