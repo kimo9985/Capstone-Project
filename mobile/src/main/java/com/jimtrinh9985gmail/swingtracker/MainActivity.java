@@ -23,7 +23,7 @@ import com.google.android.gms.wearable.DataEventBuffer;
 import com.google.android.gms.wearable.PutDataMapRequest;
 import com.google.android.gms.wearable.PutDataRequest;
 import com.google.android.gms.wearable.Wearable;
-import com.jimtrinh9985gmail.swingtracker.myDatabase.MyData;
+import com.jimtrinh9985gmail.swingtracker.myDatabase.MyDataFragment;
 import com.jimtrinh9985gmail.swingtracker.myDatabase.MyDatabase;
 
 import java.util.Calendar;
@@ -197,7 +197,7 @@ public class MainActivity extends AppCompatActivity implements
                 startActivity(intent);
                 return true;
             case R.id.menu_data:
-                Intent intent1 = new Intent(this, MyData.class);
+                Intent intent1 = new Intent(this, MyDataFragment.class);
                 startActivity(intent1);
                 return true;
         }

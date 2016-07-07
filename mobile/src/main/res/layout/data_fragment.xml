@@ -6,36 +6,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/listView_title"
-        android:text="@string/list_title"
-        style="@style/BolderText"
-        android:gravity="center_vertical"
-        android:paddingStart="8dp"
-        android:paddingEnd="8dp" />
-
-    <ImageButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/deleteCheckBox"
-        android:onClick="deleteItems"
-        android:contentDescription="@string/cd_image_button"
-        android:gravity="center_vertical|center_horizontal"
-        style="@style/ImageButton"
-        android:src="@mipmap/ic_delete_button"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true" />
-
-    <ListView
-        android:id="@+id/listView"
-        android:layout_below="@+id/listView_title"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerView"
         android:layout_above="@+id/adView"
         android:scrollbars="vertical"
         android:dividerHeight="2sp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true" />
 
     <com.google.android.gms.ads.AdView
         android:id="@+id/adView"

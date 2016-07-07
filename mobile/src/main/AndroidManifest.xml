@@ -34,7 +34,7 @@
         </activity>
 
         <activity
-            android:name=".myDatabase.MyData" >
+            android:name=".myDatabase.MyDataFragment" >
         </activity>
 
         <activity
