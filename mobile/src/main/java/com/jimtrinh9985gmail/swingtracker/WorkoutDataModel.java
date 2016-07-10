@@ -1,6 +1,4 @@
-package com.jimtrinh9985gmail.swingtracker.myDatabase;
-
-import android.util.Log;
+package com.jimtrinh9985gmail.swingtracker;
 
 /**
  * Created by Kimo on 6/21/2016.
@@ -8,14 +6,13 @@ import android.util.Log;
 public class WorkoutDataModel {
 
     public final String LOG_TAG = WorkoutDataModel.class.getSimpleName();
-    private int _id, myForehand, myBackhand, myOverhead, myStatus;
+    private int _id, myForehand, myBackhand, myOverhead;
     private String myDate;
 
     public WorkoutDataModel() {
         this.myForehand = 0;
         this.myBackhand = 0;
         this.myOverhead = 0;
-        this.myStatus = 0;
         this.myDate = null;
     }
 
@@ -25,14 +22,6 @@ public class WorkoutDataModel {
 
     public void set_id(int _id) {
         this._id = _id;
-    }
-
-    public int getMyStatus() {
-        return myStatus;
-    }
-
-    public void setMyStatus(int myStatus) {
-        this.myStatus = myStatus;
     }
 
     public int getMyForehand() {

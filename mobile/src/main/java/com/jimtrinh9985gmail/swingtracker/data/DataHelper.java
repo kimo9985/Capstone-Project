@@ -15,7 +15,7 @@ public class DataHelper extends SQLiteOpenHelper {
 
     // Database Info //
     private static final int DATABASE_VERSION = 1;
-    private static final String DATABASE_NAME = "myWorkoutDatabase";
+    private static final String DATABASE_NAME = "myWorkoutDatabase.db";
 
     public DataHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -25,8 +25,7 @@ public class DataHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
 
         final String CREATE_WORKOUT_TABLE = "CREATE TABLE " + WorkoutEntry.TABLE_NAME + " (" +
-                WorkoutEntry.KEY_ID + " INTEGER PRIMARY KEY, " +
-                WorkoutEntry.KEY_STATUS + " INTEGER, " +
+                WorkoutEntry.KEY_ID + " INTEGER PRIMARY KEY," +
                 WorkoutEntry.KEY_FOREHAND + " INTEGER, " +
                 WorkoutEntry.KEY_BACKHAND + " INTEGER, " +
                 WorkoutEntry.KEY_OVERHEAD + " INTEGER, " +

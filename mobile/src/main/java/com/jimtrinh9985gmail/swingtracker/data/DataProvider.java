@@ -15,16 +15,19 @@ public class DataProvider extends ContentProvider {
 
     public final String LOG_TAG = DataProvider.class.getSimpleName();
 
+    // URI Matcher used by this content provider //
     private static final UriMatcher sUriMatcher = buildUriMatcher();
     private DataHelper mOpenHelper;
 
     static final int WORKOUT = 100;
+    static final int WORKOUT_ID = 101;
 
     static UriMatcher buildUriMatcher() {
         final UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
         final String authority = DataContract.CONTENT_AUTHORITY;
 
         matcher.addURI(authority, DataContract.PATH_WORKOUT, WORKOUT);
+        matcher.addURI(authority, DataContract.PATH_WORKOUT + "/#", WORKOUT_ID);
         return matcher;
     }
 
@@ -75,6 +78,8 @@ public class DataProvider extends ContentProvider {
         switch (match) {
             case WORKOUT:
                 return DataContract.WorkoutEntry.CONTENT_TYPE;
+            case WORKOUT_ID:
+                return DataContract.WorkoutEntry.CONTENT_ITEM_TYPE;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }

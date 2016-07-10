@@ -11,7 +11,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.jimtrinh9985gmail.swingtracker.myDatabase.MyDataFragment;
 import com.squareup.picasso.Picasso;
 
 /**

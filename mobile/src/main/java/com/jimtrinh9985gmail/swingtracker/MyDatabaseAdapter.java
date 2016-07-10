@@ -1,16 +1,12 @@
-package com.jimtrinh9985gmail.swingtracker.myDatabase;
+package com.jimtrinh9985gmail.swingtracker;
 
-import android.content.Context;
 import android.database.Cursor;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.CheckBox;
 import android.widget.TextView;
 
-import com.jimtrinh9985gmail.swingtracker.R;
 import com.jimtrinh9985gmail.swingtracker.data.DataContract;
 
 /**
@@ -21,7 +17,6 @@ public class MyDatabaseAdapter extends RecyclerView.Adapter<MyDatabaseAdapter.My
     public final String LOG_TAG = MyDatabaseAdapter.class.getSimpleName();
 
     private Cursor mCursor;
-
 
     public class MyDatabaseAdapterViewHolder extends RecyclerView.ViewHolder {
 

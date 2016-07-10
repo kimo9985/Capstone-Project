@@ -1,10 +1,8 @@
-package com.jimtrinh9985gmail.swingtracker.myDatabase;
+package com.jimtrinh9985gmail.swingtracker;
 
 import android.app.Fragment;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -15,9 +13,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.CheckBox;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.support.v4.app.LoaderManager;
 import android.database.Cursor;
@@ -25,19 +20,23 @@ import android.database.Cursor;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
-import com.jimtrinh9985gmail.swingtracker.MainActivity;
-import com.jimtrinh9985gmail.swingtracker.ProfileFragment;
-import com.jimtrinh9985gmail.swingtracker.R;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.jimtrinh9985gmail.swingtracker.data.DataContract;
 
 /**
  * Created by Kimo on 6/21/2016.
  */
-public class MyDataFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
+public class MyDataFragment extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
     public final String LOG_TAG = MyDataFragment.class.getSimpleName();
+    private static final int WORKOUT_LOADER_ID = 0;
+
+    private static final String[] ENTRY_COLUMNS = {
+            DataContract.WorkoutEntry.KEY_ID,
+            DataContract.WorkoutEntry.KEY_DATE,
+            DataContract.WorkoutEntry.KEY_FOREHAND,
+            DataContract.WorkoutEntry.KEY_BACKHAND,
+            DataContract.WorkoutEntry.KEY_OVERHEAD
+    };
 
     private RecyclerView recyclerView;
     private MyDatabaseAdapter mMyDatabaseAdapter;
@@ -47,30 +46,23 @@ public class MyDataFragment extends Fragment implements LoaderManager.LoaderCall
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // Add this line in order for this fragment to handle menu events.
-        setHasOptionsMenu(true);
-    }
+        setContentView(R.layout.data_fragment);
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-
-        View rootView = inflater.inflate(R.layout.data_fragment, container, false);
-
-        MobileAds.initialize(getActivity(), "ca-app-pub-3940256099942544~3347511713");
-        AdView mAdView = (AdView) rootView.findViewById(R.id.adView);
+        // Google Ad Service //
+        MobileAds.initialize(getApplicationContext(), "ca-app-pub-3940256099942544~3347511713");
+        AdView mAdView = (AdView) findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder()
                 .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
                 .build();
         mAdView.loadAd(adRequest);
 
-        recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setHasFixedSize(true);
 
         recyclerView.setAdapter(mMyDatabaseAdapter);
 
-        return rootView;
+        //getLoaderManager().initLoader(WORKOUT_LOADER_ID, null, this);
     }
 
     @Override
@@ -86,23 +78,26 @@ public class MyDataFragment extends Fragment implements LoaderManager.LoaderCall
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
 
+
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
+        MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_main, menu);
+        return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_chart:
-                Intent intent = new Intent(getActivity(), MainActivity.class);
+                Intent intent = new Intent(this, MainActivity.class);
                 startActivity(intent);
                 return true;
             case R.id.menu_profile:
-                Intent intent1 = new Intent(getActivity(), ProfileFragment.class);
+                Intent intent1 = new Intent(this, ProfileFragment.class);
                 startActivity(intent1);
                 return true;
             case R.id.menu_data:

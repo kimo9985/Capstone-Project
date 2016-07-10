@@ -1,5 +1,6 @@
 package com.jimtrinh9985gmail.swingtracker;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -23,8 +24,7 @@ import com.google.android.gms.wearable.DataEventBuffer;
 import com.google.android.gms.wearable.PutDataMapRequest;
 import com.google.android.gms.wearable.PutDataRequest;
 import com.google.android.gms.wearable.Wearable;
-import com.jimtrinh9985gmail.swingtracker.myDatabase.MyDataFragment;
-import com.jimtrinh9985gmail.swingtracker.myDatabase.MyDatabase;
+import com.jimtrinh9985gmail.swingtracker.data.DataContract;
 
 import java.util.Calendar;
 
@@ -101,9 +101,13 @@ public class MainActivity extends AppCompatActivity implements
         int year = calendar.get(Calendar.YEAR);
         String date = month + "-" + day + "-" + year;
 
-        MyDatabase database = new MyDatabase(this);
+        ContentValues values = new ContentValues();
+        values.put(DataContract.WorkoutEntry.KEY_DATE, date);
+        values.put(DataContract.WorkoutEntry.KEY_FOREHAND, forehand);
+        values.put(DataContract.WorkoutEntry.KEY_BACKHAND, backhand);
+        values.put(DataContract.WorkoutEntry.KEY_OVERHEAD, overhead);
+        getContentResolver().insert(DataContract.BASE_CONTENT_URI, values);
 
-        long id = database.insertData(status, forehand, backhand, overhead, date);
         Toast.makeText(this, "Workout Data Saved!", Toast.LENGTH_LONG).show();
     }
 
