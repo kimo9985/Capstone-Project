@@ -99,14 +99,17 @@ public class MainActivity extends AppCompatActivity implements
         int day = calendar.get(Calendar.DATE);
         int month = calendar.get(Calendar.MONTH);
         int year = calendar.get(Calendar.YEAR);
-        String date = month + "-" + day + "-" + year;
+        int hour = calendar.get(Calendar.HOUR);
+        int minute = calendar.get(Calendar.MINUTE);
+        int second = calendar.get(Calendar.SECOND);
+        String date = month + "-" + day + "-" + year + " " + hour + ":" + minute + ":" + second;
 
         ContentValues values = new ContentValues();
         values.put(DataContract.WorkoutEntry.KEY_DATE, date);
         values.put(DataContract.WorkoutEntry.KEY_FOREHAND, forehand);
         values.put(DataContract.WorkoutEntry.KEY_BACKHAND, backhand);
         values.put(DataContract.WorkoutEntry.KEY_OVERHEAD, overhead);
-        getContentResolver().insert(DataContract.BASE_CONTENT_URI, values);
+        getContentResolver().insert(DataContract.WorkoutEntry.CONTENT_URI, values);
 
         Toast.makeText(this, "Workout Data Saved!", Toast.LENGTH_LONG).show();
     }

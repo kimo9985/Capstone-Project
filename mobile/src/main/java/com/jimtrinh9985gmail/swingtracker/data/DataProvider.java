@@ -7,6 +7,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 /**
  * Created by Kimo on 7/5/2016.
@@ -119,7 +120,9 @@ public class DataProvider extends ContentProvider {
         switch (match) {
             case WORKOUT:
                 rowsDeleted = database.delete(
-                        DataContract.WorkoutEntry.TABLE_NAME, selection, selectionArgs);
+                        DataContract.WorkoutEntry.TABLE_NAME,
+                        selection, selectionArgs);
+                Log.d(LOG_TAG, "DataProvider: " + selection + " " + selectionArgs);
                 break;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);

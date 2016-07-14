@@ -14,7 +14,7 @@ public class DataContract {
 
     // Use CONTENT_AUTHORITY to create the base of all URI's which apps will use to contact
     // the content provider.
-    public static Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY + "/swingData");
+    public static Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
 
     public static final String PATH_WORKOUT = "swingData";
 
